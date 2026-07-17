@@ -2,15 +2,6 @@ import type { SVGProps } from "react";
 
 import { cn } from "@/lib/utils";
 
-/**
- * Rounded heart icon with plumper lobes and a curved bottom point.
- * API-compatible with lucide icons: `fill`/size are driven via `className`
- * (e.g. `size-6 fill-[var(--muted-foreground)]`). Fill defaults to
- * `currentColor` so Tailwind `fill-*` utilities take effect.
- *
- * Decorative by default (`aria-hidden`): the accessible name belongs on the
- * interactive control that wraps it (e.g. `<button aria-label="...">`).
- */
 export function CozyHeart({ className, ...props }: SVGProps<SVGSVGElement>) {
   return (
     <svg
@@ -18,8 +9,6 @@ export function CozyHeart({ className, ...props }: SVGProps<SVGSVGElement>) {
       fill="currentColor"
       aria-hidden="true"
       focusable="false"
-      // `overflow-visible` keeps a stroke from being clipped at the viewBox
-      // edges (needed for the translucent-fill + white-outline look).
       className={cn("overflow-visible", className)}
       {...props}
     >
