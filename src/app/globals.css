@@ -66,6 +66,13 @@
   --border: oklch(0.922 0.005 56);
   --input: oklch(0.922 0.005 56);
   --ring: oklch(0.637 0.208 13.5);
+
+  /* Shadow for controls displayed over images */
+  --image-overlay-shadow: color-mix(
+    in oklch,
+    var(--foreground) 85%,
+    transparent
+  );
 }
 
 @layer base {

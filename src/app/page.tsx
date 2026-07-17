@@ -32,18 +32,14 @@ export default async function Home({
       <Header />
 
       <section className="border-b bg-gradient-to-b from-accent/40 to-background">
-        <div className="mx-auto max-w-7xl px-6 py-14 text-center">
-          <h1 className="font-brand text-3xl tracking-tight sm:text-4xl">
-            Escape and relax
-          </h1>
-
-          <div className="mx-auto mt-8 max-w-3xl">
+        <div className="mx-auto max-w-7xl px-6 pt-2 pb-8">
+          <div className="mx-auto max-w-3xl">
             <SearchBar />
           </div>
         </div>
       </section>
 
-      <main className="mx-auto max-w-7xl px-6 py-10">
+      <main className="mx-auto w-[90vw] max-w-[1920px] px-6 py-10">
         <h2 className="mb-6 text-xl font-semibold">
           {isSearching
             ? `${results.length} ${results.length === 1 ? "stay" : "stays"}${

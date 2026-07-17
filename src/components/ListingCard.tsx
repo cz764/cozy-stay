@@ -1,6 +1,7 @@
 import Image from "next/image";
-import { Star, Heart } from "lucide-react";
+import { Star } from "lucide-react";
 
+import { CozyHeart } from "@/components/icons/CozyHeart";
 import { Listing } from "@/lib/types";
 
 interface ListingCardProps {
@@ -8,43 +9,35 @@ interface ListingCardProps {
 }
 
 export function ListingCard({ listing }: ListingCardProps) {
-  const { title, location, image, pricePerNight, rating, reviewCount, maxGuests } =
-    listing;
+  const { title, location, image, pricePerNight, rating } = listing;
 
   return (
-    <article className="group flex flex-col">
-      <div className="relative aspect-[4/3] w-full overflow-hidden rounded-2xl">
+    <article className="group flex cursor-pointer flex-col">
+      <div className="relative aspect-square w-full overflow-hidden rounded-2xl">
         <Image
           src={image}
           alt={title}
           fill
-          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          className="object-cover transition-transform duration-300 group-hover:scale-105"
+          sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, (max-width: 1536px) 20vw, 16vw"
+          className="object-cover"
         />
         <button
           aria-label="Save to wishlist"
-          className="absolute right-3 top-3 rounded-full p-2 text-white/90 transition-transform hover:scale-110"
+          className="absolute right-2 top-2 rounded-full p-2 text-white/90 transition-transform duration-200 hover:scale-108"
         >
-          <Heart className="size-6 drop-shadow [&:hover]:fill-primary [&:hover]:text-primary" />
+          <CozyHeart className="size-6 fill-black/50 stroke-white [stroke-width:2px]" />
         </button>
       </div>
 
-      <div className="mt-3 flex items-start justify-between gap-2">
-        <h3 className="font-medium leading-snug text-foreground">{title}</h3>
-        <span className="flex shrink-0 items-center gap-1 text-sm">
-          <Star className="size-4 fill-foreground text-foreground" />
-          {rating.toFixed(2)}
-        </span>
-      </div>
+      <h3 className="mt-2 truncate text-sm font-medium text-foreground">
+        Home in {location}
+      </h3>
 
-      <p className="text-sm text-muted-foreground">{location}</p>
-      <p className="text-sm text-muted-foreground">
-        Up to {maxGuests} guests · {reviewCount} reviews
-      </p>
-
-      <p className="mt-1 text-sm">
-        <span className="font-semibold text-foreground">${pricePerNight}</span>{" "}
-        <span className="text-muted-foreground">night</span>
+      <p className="flex items-center gap-1 text-xs text-muted-foreground">
+        <Star className="size-3 fill-muted-foreground text-muted-foreground" />
+        <span>{rating.toFixed(2)}</span>
+        <span aria-hidden="true">·</span>
+        <span>${pricePerNight} night</span>
       </p>
     </article>
   );
