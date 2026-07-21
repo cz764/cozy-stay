@@ -48,7 +48,7 @@ export function SearchBar() {
           min={1}
           value={guests}
           onChange={(e) => setGuests(e.target.value)}
-          placeholder="Add guests"
+          placeholder="How many guests"
           className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
         />
       </SearchField>
