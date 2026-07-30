@@ -5,7 +5,10 @@ import { useState } from "react";
 import { MapPin, Users, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
-import { SearchField, SearchDivider } from "@/components/SearchField";
+import {
+  SearchField,
+  SearchDivider,
+} from "@/components/SearchField/SearchField";
 
 export function SearchBar() {
   const router = useRouter();
@@ -14,7 +17,7 @@ export function SearchBar() {
   const [location, setLocation] = useState(searchParams.get("location") ?? "");
   const [guests, setGuests] = useState(searchParams.get("guests") ?? "");
 
-  function handleSubmit(e: React.FormEvent) {
+  function handleSubmit(e: React.SubmitEvent) {
     e.preventDefault();
 
     const params = new URLSearchParams();

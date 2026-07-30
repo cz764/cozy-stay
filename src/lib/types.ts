@@ -14,3 +14,8 @@ export interface Listing {
     ac: boolean;
   };
 }
+
+export interface ListingQuery extends URLSearchParams {
+  location: string | undefined;
+  guests: string | undefined;
+}
