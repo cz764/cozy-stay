@@ -1,4 +1,4 @@
-import { fetchListings } from "@/app/api";
+import { fetchListings } from "@/app/api/server";
 import { DEFAULT_LIMIT } from "@/lib/pagination";
 import { ListingQuery, ListingsPage } from "@/lib/types";
 import FeaturedStaysHeader from "../FeaturedStaysHeader/FeaturedStaysHeader";

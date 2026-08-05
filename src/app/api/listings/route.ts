@@ -1,62 +1,40 @@
 import { NextRequest, NextResponse } from "next/server";
 
-import { listings } from "@/lib/data";
-import { DEFAULT_LIMIT, MAX_LIMIT } from "@/lib/pagination";
-
-/** Reads a non-negative integer param, falling back on anything malformed. */
-function readCount(value: string | null, fallback: number) {
-  if (value === null || value.trim() === "") return fallback;
-  const parsed = Number(value);
-  return Number.isInteger(parsed) && parsed >= 0 ? parsed : fallback;
-}
+import { fetchListings } from "../server";
 
 /**
- * Stubbed "search stays" endpoint. Filtering and pagination happen here so the
- * frontend treats it like a real backend — swap the in-memory work for a
- * DB/service call later and the client code stays the same.
+ * HTTP wrapper over the stubbed backend in `../server` — the wire the client
+ * feed pulls on as the user scrolls. The server-rendered first page calls that
+ * module directly instead, so this handler is the client's path only.
  *
- * Offset pagination is safe here because the catalog is static. Against a
- * mutable dataset an insert would shift every later offset and duplicate items
- * across requests; that's the point to move to cursors.
+ * Its job is the HTTP edge and nothing else: parse the query string, delegate,
+ * serialize. Defaults and bounds belong to the backend, not to this adapter.
+ * Point it at a real service later and the client contract is unchanged.
  */
 export async function GET(request: NextRequest) {
   const { searchParams } = request.nextUrl;
 
-  const location = (searchParams.get("location") ?? "").toLowerCase();
-  const guestsParam = searchParams.get("guests") ?? "";
-  const guests =
-    guestsParam !== "" && Number.isFinite(Number(guestsParam))
-      ? Number(guestsParam)
-      : undefined;
-
-  const skip = readCount(searchParams.get("skip"), 0);
-  const limit = Math.min(
-    Math.max(readCount(searchParams.get("limit"), DEFAULT_LIMIT), 1),
-    MAX_LIMIT,
-  );
-
-  const matches = listings.filter((listing) => {
-    const matchesLocation =
-      !location ||
-      listing.location.toLowerCase().includes(location) ||
-      listing.title.toLowerCase().includes(location);
-    const matchesGuests = guests === undefined || listing.maxGuests >= guests;
-    return matchesLocation && matchesGuests;
+  const page = await fetchListings({
+    location: searchParams.get("location") ?? undefined,
+    guests: searchParams.get("guests") ?? undefined,
+    skip: readCount(searchParams.get("skip")),
+    limit: readCount(searchParams.get("limit")),
   });
 
-  const results = matches.slice(skip, skip + limit);
-
-  // Simulate network latency so loading states are exercised. Remove once a
-  // real backend is in place.
+  // Simulate network latency so the infinite-scroll loading state is exercised.
+  // Only on this path: the first page is rendered server-side and shouldn't be
+  // held up. Remove once a real backend is in place.
   await new Promise((resolve) => setTimeout(resolve, 400));
 
-  return NextResponse.json({
-    listings: results,
-    total: matches.length,
-    skip,
-    limit,
-    // Computed server-side so the client never has to know the arithmetic —
-    // it keeps meaning the same thing if this moves to cursor pagination.
-    hasMore: skip + results.length < matches.length,
-  });
+  return NextResponse.json(page);
+}
+
+/**
+ * Reads a non-negative integer param. Anything missing or malformed returns
+ * `undefined` and falls through to the backend's own default.
+ */
+function readCount(value: string | null) {
+  if (value === null || value.trim() === "") return undefined;
+  const parsed = Number(value);
+  return Number.isInteger(parsed) && parsed >= 0 ? parsed : undefined;
 }
