@@ -40,5 +40,7 @@ export async function fetchListings({
   if (!res.ok)
     throw new Error(`Error fetching stays, status code: ${res.status}`);
 
-  return res.json();
+  const data = await res.json();
+
+  return data;
 }
