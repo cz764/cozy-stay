@@ -1,4 +1,4 @@
-import type { Listing, ListingQuery } from "@/lib/types";
+import type { ListingQuery, ListingsPage } from "@/lib/types";
 
 const getBaseUrl = () => {
   if (typeof window !== "undefined") return "";
@@ -6,9 +6,19 @@ const getBaseUrl = () => {
   return `http://localhost:${process.env.PORT || 3000}`;
 };
 
-export async function fetchListings(query: ListingQuery): Promise<Listing[]> {
+export interface FetchListingsParams extends ListingQuery {
+  /** Offset into the filtered results. Callers pass `items.length`. */
+  skip?: number;
+  limit?: number;
+}
+
+export async function fetchListings({
+  location,
+  guests,
+  skip,
+  limit,
+}: FetchListingsParams): Promise<ListingsPage> {
   const params = new URLSearchParams();
-  const { location, guests } = query;
 
   if (location) {
     params.set("location", location);
@@ -18,10 +28,17 @@ export async function fetchListings(query: ListingQuery): Promise<Listing[]> {
     params.set("guests", guests);
   }
 
+  if (skip !== undefined) {
+    params.set("skip", String(skip));
+  }
+
+  if (limit !== undefined) {
+    params.set("limit", String(limit));
+  }
+
   const res = await fetch(`${getBaseUrl()}/api/listings?${params}`);
   if (!res.ok)
     throw new Error(`Error fetching stays, status code: ${res.status}`);
 
-  const data: { listings: Listing[] } = await res.json();
-  return data.listings;
+  return res.json();
 }

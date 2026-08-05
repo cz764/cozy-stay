@@ -1,5 +1,6 @@
 import { fetchListings } from "@/app/api";
-import { ListingQuery } from "@/lib/types";
+import { DEFAULT_LIMIT } from "@/lib/pagination";
+import { ListingQuery, ListingsPage } from "@/lib/types";
 import FeaturedStaysHeader from "../FeaturedStaysHeader/FeaturedStaysHeader";
 import { ListingGrid } from "../ListingGrid/ListingGrid";
 import ErrorDisplay from "../ErrorDisplay/ErrorDisplay";
@@ -12,10 +13,10 @@ export default async function ListingLoader({
   searchParams,
 }: ListingLoaderProps) {
   const { location, guests } = searchParams;
-  let listings;
+  let firstPage: ListingsPage;
 
   try {
-    listings = await fetchListings(searchParams);
+    firstPage = await fetchListings({ ...searchParams, limit: DEFAULT_LIMIT });
   } catch (ex) {
     console.error(ex);
     const message =
@@ -25,12 +26,14 @@ export default async function ListingLoader({
 
   return (
     <>
+      {/* `total` counts every match, not just this page — using the page
+          length here would under-report once results exceed the limit. */}
       <FeaturedStaysHeader
         location={location}
         guests={guests}
-        total={listings.length}
+        total={firstPage.total}
       />
-      <ListingGrid listings={listings} />
+      <ListingGrid listings={firstPage.listings} />
     </>
   );
 }

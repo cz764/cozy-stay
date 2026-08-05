@@ -1,3 +1,4 @@
+import { DEFAULT_LIMIT } from "@/lib/pagination";
 import { ListingCardSkeleton } from "../ListingCard/ListingCardSkeleton";
 
 const gridClassName =
@@ -6,7 +7,7 @@ const gridClassName =
 export default function ListingGridSkeleton() {
   return (
     <div className={gridClassName}>
-      {Array.from({ length: 8 }, (_, i) => (
+      {Array.from({ length: DEFAULT_LIMIT }, (_, i) => (
         <ListingCardSkeleton key={`skeleton-${i}`} />
       ))}
     </div>
