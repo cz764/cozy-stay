@@ -2,7 +2,7 @@ import { fetchListings } from "@/app/api";
 import { DEFAULT_LIMIT } from "@/lib/pagination";
 import { ListingQuery, ListingsPage } from "@/lib/types";
 import FeaturedStaysHeader from "../FeaturedStaysHeader/FeaturedStaysHeader";
-import { ListingGrid } from "../ListingGrid/ListingGrid";
+import ListingFeed from "../ListingFeed/ListingFeed";
 import ErrorDisplay from "../ErrorDisplay/ErrorDisplay";
 
 interface ListingLoaderProps {
@@ -33,7 +33,9 @@ export default async function ListingLoader({
         guests={guests}
         total={firstPage.total}
       />
-      <ListingGrid listings={firstPage.listings} />
+      {/* Server-rendered first page is handed to the client feed, which owns
+          every page appended after it. */}
+      <ListingFeed initialPage={firstPage} query={{ location, guests }} />
     </>
   );
 }

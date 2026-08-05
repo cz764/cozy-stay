@@ -1,3 +1,4 @@
+import { memo } from "react";
 import Image from "next/image";
 import { Star } from "lucide-react";
 
@@ -8,7 +9,14 @@ interface ListingCardProps {
   listing: Listing;
 }
 
-export function ListingCard({ listing }: ListingCardProps) {
+/**
+ * Memoized so appending a page doesn't re-render the cards already on screen.
+ * `ListingFeed` appends with `[...previous, ...next]`, which preserves each
+ * existing listing's object identity, so the shallow prop compare hits.
+ */
+export const ListingCard = memo(function ListingCard({
+  listing,
+}: ListingCardProps) {
   const { title, location, image, pricePerNight, rating } = listing;
 
   return (
@@ -41,4 +49,4 @@ export function ListingCard({ listing }: ListingCardProps) {
       </p>
     </article>
   );
-}
+});

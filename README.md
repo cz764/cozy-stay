@@ -42,22 +42,24 @@ work in the route handler for a DB call and no client code changes.
 GET /api/listings?location=lisbon&guests=4&skip=24&limit=12
 ```
 
-| Param      | Type      | Default | Notes                                              |
-| ---------- | --------- | ------- | -------------------------------------------------- |
-| `location` | string    | —       | Case-insensitive match on listing location or title |
-| `guests`   | number    | —       | Matches listings with `maxGuests >= guests`         |
-| `skip`     | int ≥ 0   | `0`     | Offset into the filtered results                    |
-| `limit`    | int 1–60  | `24`    | Clamped to `MAX_LIMIT`; malformed values fall back  |
+| Param      | Type     | Default | Notes                                               |
+| ---------- | -------- | ------- | --------------------------------------------------- |
+| `location` | string   | —       | Case-insensitive match on listing location or title |
+| `guests`   | number   | —       | Matches listings with `maxGuests >= guests`         |
+| `skip`     | int ≥ 0  | `0`     | Offset into the filtered results                    |
+| `limit`    | int 1–60 | `24`    | Clamped to `MAX_LIMIT`; malformed values fall back  |
 
 ### Response
 
 ```jsonc
 {
-  "listings": [ /* this slice only */ ],
-  "total": 37,      // matches for the whole query, not just this slice
+  "listings": [
+    /* this slice only */
+  ],
+  "total": 37, // matches for the whole query, not just this slice
   "skip": 24,
   "limit": 12,
-  "hasMore": true
+  "hasMore": true,
 }
 ```
 
@@ -94,7 +96,7 @@ Search params (`location`, `guests`) live in the URL. Pagination depth does
 The initial fetch is `skip=0&limit=24` (`DEFAULT_LIMIT` in `lib/pagination.ts`).
 The server has no viewport, so this can't adapt to screen size — 24 fills the
 widest grid (6 columns) and merely over-fetches a little on mobile, which is
-cheaper than a second round trip. Appended pages will live in client component
+cheaper than a second round trip. Appended pages live in `ListingFeed`'s client
 state; refresh resets to the top.
 
 Putting the depth in the URL (e.g. `?shown=48`) would restore scroll position
@@ -119,16 +121,18 @@ src/
     SearchBar/SearchBar.tsx         Client; owns the search inputs + URL push
     SearchField/SearchField.tsx     Presentational field/divider used by SearchBar
     ListingLoader/
-      ListingLoader.tsx             Async server component — fetches page 1, renders below
+      ListingLoader.tsx             Async server component — fetches page 1, hands it to the feed
       ListingLoaderSkeleton.tsx     Suspense fallback (header + grid skeletons)
     FeaturedStaysHeader/
       FeaturedStaysHeader.tsx       "Featured stays in X" — takes `total`
       FeaturedStaysHeaderSkeleton.tsx
+    ListingFeed/
+      ListingFeed.tsx               Client; owns accumulated items + scroll append
     ListingGrid/
       ListingGrid.tsx               Responsive grid (1→6 cols) + empty state
-      ListingGridSkeleton.tsx
+      ListingGridSkeleton.tsx       Placeholder row, defaults to DEFAULT_LIMIT
     ListingCard/
-      ListingCard.tsx               One stay
+      ListingCard.tsx               One stay (memo'd)
       ListingCardSkeleton.tsx
     ErrorDisplay/ErrorDisplay.tsx   Shown when the fetch throws
     icons/CozyHeart.tsx             Inline SVG heart
@@ -142,9 +146,6 @@ src/
 
 ## Next steps
 
-- **Infinite scroll** — the API is ready; what's left is a client component
-  owning the accumulated `items` + `hasMore`, and a choice of trigger
-  (`IntersectionObserver` sentinel vs. an explicit "Show more" button).
 - A filter sidebar — **ratings, location, laundry, pets-friendly, AC** — that
   writes to the same query string (e.g. `?minRating=4.8&laundry=true&pets=true`),
   keeping every result shareable. The `Listing.amenities` facets already exist
@@ -152,6 +153,32 @@ src/
 - A dedicated `/search` results page if/when search should leave the landing page.
 - Date availability (modeling availability ranges per listing).
 - Unit tests
+- TODO: scaling infinite scroll past ~1,000 listings
+
+### TODO: scaling infinite scroll past ~1,000 listings
+
+Fine at 50 rows today. Ordered by cost — each stage waits for its trigger.
+
+- **Done already** — `next/image` lazy-loads offscreen images (the dominant
+  cost), `ListingCard` is `memo`'d. Enough for a few hundred cards.
+- **1. `content-visibility: auto`** _(jank at ~300–500 cards)_ — skips offscreen
+  layout/paint but keeps cards in the DOM, so SEO, Ctrl+F and a11y survive.
+  Two lines of CSS. Needs `contain-intrinsic-size: auto <h>` or the scrollbar
+  jitters, since card height varies ~285–420px across breakpoints.
+- **2. Virtualize** _(~1,000+ cards, confirmed by a profile)_ — use
+  `@tanstack/react-virtual` or `react-virtuoso`, **not** `react-window`, which
+  scrolls its own inner div and would strand the header outside it. Needs a
+  `ResizeObserver` for the 1→6 column count. Costs SEO, Ctrl+F, a11y — mitigate
+  by leaving the server-rendered first page un-virtualized.
+- **3. API changes** _(real backend with mutable data)_ — switch to cursor
+  pagination (offset drifts when rows are inserted mid-list, duplicating items);
+  drop the exact `total`, since `COUNT(*)` over millions dominates the request —
+  render "1,000+ stays" instead.
+- **4. Evict far-offscreen pages** _(heap growth over a long session)_ — Stage 2
+  windows the DOM, but `items` still grows forever. Needs upward refetch, hence
+  last.
+- **Consider first:** nobody scrolls 1,000 stays. Better filters, sort, and a
+  result cap beat virtualization — that only makes bad browsing faster.
 
 ## UX improvements
 
