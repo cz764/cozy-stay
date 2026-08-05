@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { Suspense } from "react";
 import {
   Playwrite_US_Modern,
   Bricolage_Grotesque,
@@ -6,6 +7,7 @@ import {
 } from "next/font/google";
 import { Header } from "@/components/Header/Header";
 import { SearchBar } from "@/components/SearchBar/SearchBar";
+import { SearchBarSkeleton } from "@/components/SearchBar/SearchBarSkeleton";
 import "./globals.css";
 
 const roboto = Roboto({
@@ -47,7 +49,9 @@ export default function RootLayout({
           <section className="border-b bg-gradient-to-b from-accent/40 to-background">
             <div className="mx-auto max-w-7xl px-6 pt-2 pb-8">
               <div className="mx-auto max-w-3xl">
-                <SearchBar />
+                <Suspense fallback={<SearchBarSkeleton />}>
+                  <SearchBar />
+                </Suspense>
               </div>
             </div>
           </section>

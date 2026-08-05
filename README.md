@@ -118,7 +118,9 @@ src/
     globals.css                     Tailwind v4 + shadcn theme tokens (warm coral palette)
   components/                       One directory per component, skeleton alongside
     Header/Header.tsx
-    SearchBar/SearchBar.tsx         Client; owns the search inputs + URL push
+    SearchBar/
+      SearchBar.tsx                 Client; owns the search inputs + URL push
+      SearchBarSkeleton.tsx         Static replica used as the Suspense fallback
     SearchField/SearchField.tsx     Presentational field/divider used by SearchBar
     ListingLoader/
       ListingLoader.tsx             Async server component — fetches page 1, hands it to the feed
@@ -151,6 +153,7 @@ src/
   keeping every result shareable. The `Listing.amenities` facets already exist
   for this.
 - A dedicated `/search` results page if/when search should leave the landing page.
+- A `/listing/:id` listing detail page.
 - Date availability (modeling availability ranges per listing).
 - Unit tests
 - TODO: scaling infinite scroll past ~1,000 listings
