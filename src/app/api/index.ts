@@ -1,9 +1,13 @@
 import type { ListingQuery, ListingsPage } from "@/lib/types";
 
 export interface FetchListingsParams extends ListingQuery {
-  /** Offset into the filtered results. Callers pass `items.length`. */
-  skip?: number;
-  limit?: number;
+  /**
+   * Opaque cursor of the last row already held — the previous page's
+   * `endCursor`. Omit for the first page.
+   */
+  after?: string;
+  /** Page size. */
+  first?: number;
 }
 
 /**
@@ -15,15 +19,15 @@ export interface FetchListingsParams extends ListingQuery {
  * would have to build (`VERCEL_URL`) is the deployment domain that Vercel's
  * Deployment Protection answers with an HTML login page.
  *
- * Same-origin from the browser, so the relative URL is all this needs. When
- * the API moves to its own host, only `./server` changes — this stays pointed
- * at the route handler, which proxies.
+ * Same-origin from the browser, so the relative URL is all this needs. The
+ * route handler proxies to `./server`, keeping Supabase credentials and the
+ * GraphQL documents out of the browser bundle.
  */
 export async function fetchListings({
   location,
   guests,
-  skip,
-  limit,
+  after,
+  first,
 }: FetchListingsParams): Promise<ListingsPage> {
   const params = new URLSearchParams();
 
@@ -35,12 +39,12 @@ export async function fetchListings({
     params.set("guests", guests);
   }
 
-  if (skip !== undefined) {
-    params.set("skip", String(skip));
+  if (after !== undefined) {
+    params.set("after", after);
   }
 
-  if (limit !== undefined) {
-    params.set("limit", String(limit));
+  if (first !== undefined) {
+    params.set("first", String(first));
   }
 
   const res = await fetch(`/api/listings?${params}`);

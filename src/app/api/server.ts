@@ -1,71 +1,134 @@
-import { listings } from "@/lib/data";
+import { graphql } from "@/gql";
+import type { ListingsFilter } from "@/gql/graphql";
 import { DEFAULT_LIMIT, MAX_LIMIT } from "@/lib/pagination";
 import type { ListingsPage } from "@/lib/types";
+import { executeGraphQL } from "./graphql";
 import type { FetchListingsParams } from ".";
 
 /**
- * The stubbed backend itself — the only place search and pagination are
- * implemented. Server-side callers (`ListingLoader`, and `GET /api/listings`
- * on behalf of the client feed) both come through here.
+ * The card projection — everything the feed renders and nothing the detail
+ * page adds. The detail query will spread this same fragment so card and
+ * detail can never disagree on shared fields.
+ */
+export const ListingCardFields = graphql(`
+  fragment ListingCardFields on Listings {
+    id
+    title
+    location
+    pricePerNight
+    rating
+    reviewCount
+    maxGuests
+    laundry
+    petsFriendly
+    ac
+    listingImagesCollection(first: 1, orderBy: [{ sortOrder: AscNullsLast }]) {
+      edges {
+        node {
+          url
+        }
+      }
+    }
+  }
+`);
+
+const ListingFeedQuery = graphql(`
+  query ListingFeed($first: Int!, $after: Cursor, $filter: ListingsFilter) {
+    listingsCollection(
+      first: $first
+      after: $after
+      filter: $filter
+      orderBy: [{ id: AscNullsLast }]
+    ) {
+      totalCount
+      pageInfo {
+        hasNextPage
+        endCursor
+      }
+      edges {
+        node {
+          ...ListingCardFields
+        }
+      }
+    }
+  }
+`);
+
+/**
+ * The backend client — the only place search and pagination are implemented,
+ * now backed by Supabase pg_graphql. Server-side callers (`ListingLoader`, and
+ * `GET /api/listings` on behalf of the client feed) both come through here.
  *
- * Mirrors the signature of the browser client in `./index`, so this is the one
- * line that changes when a real service exists: the body becomes a `fetch` of
- * `process.env.API_BASE_URL` and no call site moves.
+ * Server-only on purpose: keeps the Supabase credentials and the GraphQL
+ * documents out of the browser bundle, and keeps the infinite scroll a real
+ * network round trip through our own route handler.
  *
- * Server-only on purpose. Reaching the mock data from a server component by
- * fetching our own route handler would send the request out through the public
- * edge network and back — where Vercel's Deployment Protection redirects the
- * `VERCEL_URL` deployment domain to an SSO login page, so the "JSON" that came
- * back was HTML. Keeping this out of the client graph also keeps `lib/data`
- * out of the browser bundle, which is what makes the infinite scroll a real
- * network round trip rather than a local array slice.
+ * Defaults and bounds live here rather than at the HTTP edge: they're the
+ * backend's policy. The upper bound stops a hand-crafted `?first=99999` asking
+ * for the world (pg_graphql independently enforces max_rows = MAX_LIMIT).
  */
 export async function fetchListings({
   location,
   guests,
-  skip,
-  limit,
+  after,
+  first,
 }: FetchListingsParams): Promise<ListingsPage> {
-  const needle = (location ?? "").toLowerCase();
+  const needle = (location ?? "").trim();
   const guestCount =
     guests && Number.isFinite(Number(guests)) ? Number(guests) : undefined;
 
-  // Defaults and bounds live here rather than at the HTTP edge: they're the
-  // backend's policy, and they should survive the move to a real one. The
-  // upper bound stops a hand-crafted `?limit=99999` asking for the world.
-  const offset =
-    skip !== undefined && Number.isInteger(skip) && skip >= 0 ? skip : 0;
   const size = Math.min(
     Math.max(
-      limit !== undefined && Number.isInteger(limit) ? limit : DEFAULT_LIMIT,
+      first !== undefined && Number.isInteger(first) ? first : DEFAULT_LIMIT,
       1,
     ),
     MAX_LIMIT,
   );
 
-  const matches = listings.filter((listing) => {
-    const matchesLocation =
-      !needle ||
-      listing.location.toLowerCase().includes(needle) ||
-      listing.title.toLowerCase().includes(needle);
-    const matchesGuests =
-      guestCount === undefined || listing.maxGuests >= guestCount;
-    return matchesLocation && matchesGuests;
+  const conditions: ListingsFilter[] = [];
+  if (needle) {
+    conditions.push({
+      or: [
+        { location: { ilike: `%${needle}%` } },
+        { title: { ilike: `%${needle}%` } },
+      ],
+    });
+  }
+  if (guestCount !== undefined) {
+    conditions.push({ maxGuests: { gte: guestCount } });
+  }
+
+  const data = await executeGraphQL(ListingFeedQuery, {
+    first: size,
+    after: after ?? null,
+    filter: conditions.length > 0 ? { and: conditions } : null,
   });
 
-  // Offset pagination is safe here because the catalog is static. Against a
-  // mutable dataset an insert would shift every later offset and duplicate
-  // items across requests; that's the point to move to cursors.
-  const results = matches.slice(offset, offset + size);
+  const collection = data.listingsCollection;
+  if (!collection) {
+    throw new Error("GraphQL response is missing listingsCollection");
+  }
 
   return {
-    listings: results,
-    /** Matches across every page for this query, not just this slice. */
-    total: matches.length,
-    skip: offset,
-    limit: size,
-    // Computed here so the client never has to know the arithmetic — it keeps
-    // meaning the same thing if this moves to cursor pagination.
-    hasMore: offset + results.length < matches.length,
+    listings: collection.edges.map(({ node }) => ({
+      // BigInt and numeric arrive as strings over GraphQL; the UI type keeps
+      // id a string and rating a number.
+      id: String(node.id),
+      title: node.title,
+      location: node.location,
+      image: node.listingImagesCollection?.edges[0]?.node.url ?? "",
+      pricePerNight: node.pricePerNight,
+      rating: Number(node.rating),
+      reviewCount: node.reviewCount,
+      maxGuests: node.maxGuests,
+      amenities: {
+        laundry: node.laundry,
+        petsFriendly: node.petsFriendly,
+        ac: node.ac,
+      },
+    })),
+    totalCount: collection.totalCount,
+    endCursor: collection.pageInfo.endCursor ?? null,
+    hasNextPage: collection.pageInfo.hasNextPage,
   };
 }

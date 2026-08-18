@@ -16,7 +16,7 @@ export default async function ListingLoader({
   let firstPage: ListingsPage;
 
   try {
-    firstPage = await fetchListings({ ...searchParams, limit: DEFAULT_LIMIT });
+    firstPage = await fetchListings({ ...searchParams, first: DEFAULT_LIMIT });
   } catch (ex) {
     console.error(ex);
     const message =
@@ -26,12 +26,12 @@ export default async function ListingLoader({
 
   return (
     <>
-      {/* `total` counts every match, not just this page — using the page
+      {/* `totalCount` counts every match, not just this page — using the page
           length here would under-report once results exceed the limit. */}
       <FeaturedStaysHeader
         location={location}
         guests={guests}
-        total={firstPage.total}
+        total={firstPage.totalCount}
       />
       {/* Server-rendered first page is handed to the client feed, which owns
           every page appended after it. */}

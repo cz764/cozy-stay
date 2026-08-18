@@ -24,7 +24,8 @@ interface ListingFeedProps {
  */
 export default function ListingFeed({ initialPage, query }: ListingFeedProps) {
   const [items, setItems] = useState<Listing[]>(initialPage.listings);
-  const [hasMore, setHasMore] = useState(initialPage.hasMore);
+  const [cursor, setCursor] = useState<string | null>(initialPage.endCursor);
+  const [hasMore, setHasMore] = useState(initialPage.hasNextPage);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -44,18 +45,19 @@ export default function ListingFeed({ initialPage, query }: ListingFeedProps) {
       const nextPage = await fetchListings({
         location,
         guests,
-        skip: items.length,
-        limit: DEFAULT_LIMIT,
+        after: cursor ?? undefined,
+        first: DEFAULT_LIMIT,
       });
       setItems((previous) => [...previous, ...nextPage.listings]);
-      setHasMore(nextPage.hasMore);
+      setCursor(nextPage.endCursor);
+      setHasMore(nextPage.hasNextPage);
     } catch (ex) {
       console.error(ex);
       setError(ex instanceof Error ? ex.message : "Could not load more stays.");
     } finally {
       setIsLoading(false);
     }
-  }, [location, guests, items.length]);
+  }, [location, guests, cursor]);
 
   /**
    * Callback ref on the sentinel. React 19 runs the returned cleanup when the
@@ -63,8 +65,8 @@ export default function ListingFeed({ initialPage, query }: ListingFeedProps) {
    * involved — and no `hasMore`/`error` guard either, since `renderFooter`
    * already only mounts the sentinel when there is a next page to fetch.
    *
-   * `items.length` flows in through `loadNextPage`, so each rebuild closes
-   * over the current skip offset.
+   * The page cursor flows in through `loadNextPage`, so each rebuild closes
+   * over the current position in the result set.
    */
   const observeSentinel = useCallback(
     (node: HTMLDivElement | null) => {
@@ -80,7 +82,7 @@ export default function ListingFeed({ initialPage, query }: ListingFeedProps) {
         },
         // Start fetching before the sentinel is actually visible, so the next
         // page usually lands before the user reaches the bottom.
-        { rootMargin: "600px" },
+        { rootMargin: "200px" },
       );
 
       observer.observe(node);

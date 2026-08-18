@@ -21,17 +21,20 @@ export interface ListingQuery {
 }
 
 /**
- * One slice of search results, shaped like a paginated backend response.
+ * One slice of search results, shaped like a Relay-style connection page.
  *
- * Offset-based (`skip`/`limit`) rather than page-based so a single request can
- * cover an arbitrary range — the client derives `skip` from how many items it
- * already holds, with no page counter to keep in sync.
+ * Cursor-based (`after`/`first`) rather than offset-based: an insert into the
+ * catalog shifts every later offset and duplicates items across requests,
+ * while a cursor pins the next page to the last row already seen.
  */
 export interface ListingsPage {
   listings: Listing[];
   /** Matches across every page for this query, not just the returned slice. */
-  total: number;
-  skip: number;
-  limit: number;
-  hasMore: boolean;
+  totalCount: number;
+  /**
+   * Cursor of the last row in `listings` — pass as `after` to fetch the next
+   * page. Null when the page is empty.
+   */
+  endCursor: string | null;
+  hasNextPage: boolean;
 }
