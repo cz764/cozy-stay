@@ -101,7 +101,7 @@ Consequences:
 - `ListingFeed` stores the last `endCursor` instead of deriving `skip` from
   `items.length`. (Side effect: `loadNextPage`'s dependency shifts from
   `items.length` to the cursor — one identity change per page, same as today.)
-- `ListingsPage` in `src/lib/types.ts` is reshaped around
+- `ListingsPage` in `src/data/types.ts` is reshaped around
   `{ endCursor, hasNextPage, totalCount }`.
 - Search filters map directly: location → `ilike`, guests → `maxGuests: {gte}`.
 

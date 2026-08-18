@@ -1,7 +1,7 @@
 import { graphql } from "@/gql";
 import type { ListingsFilter } from "@/gql/graphql";
-import { DEFAULT_LIMIT, MAX_LIMIT } from "@/lib/pagination";
-import type { ListingsPage } from "@/lib/types";
+import { DEFAULT_LIMIT, MAX_LIMIT } from "@/data/constants";
+import type { ListingsPage } from "@/data/types";
 import { executeGraphQL } from "./graphql";
 import type { FetchListingsParams } from ".";
 

@@ -1,4 +1,4 @@
-import { DEFAULT_LIMIT } from "@/lib/pagination";
+import { DEFAULT_LIMIT } from "@/data/constants";
 import { ListingCardSkeleton } from "../ListingCard/ListingCardSkeleton";
 
 const gridClassName =

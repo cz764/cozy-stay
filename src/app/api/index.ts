@@ -1,4 +1,4 @@
-import type { ListingQuery, ListingsPage } from "@/lib/types";
+import type { ListingQuery, ListingsPage } from "@/data/types";
 
 export interface FetchListingsParams extends ListingQuery {
   /**

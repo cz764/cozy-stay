@@ -3,7 +3,7 @@ import Image from "next/image";
 import { Star } from "lucide-react";
 
 import { CozyHeart } from "@/components/icons/CozyHeart";
-import { Listing } from "@/lib/types";
+import { Listing } from "@/data/types";
 
 interface ListingCardProps {
   listing: Listing;

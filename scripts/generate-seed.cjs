@@ -1,10 +1,10 @@
-// One-off generator: ports src/lib/data.ts into supabase/seed.sql so the 50
+// Ports scripts/seed-listings.ts into supabase/seed.sql so the 50
 // hand-written listings are never transcribed by hand.
 const fs = require("fs");
 
 const REPO = require("path").join(__dirname, "..");
 
-const src = fs.readFileSync(`${REPO}/src/lib/data.ts`, "utf8");
+const src = fs.readFileSync(`${REPO}/scripts/seed-listings.ts`, "utf8");
 const arrayLiteral = src
   .replace(/import[\s\S]*?;\n/, "")
   .replace(/export const listings: Listing\[\] =/, "")
@@ -24,7 +24,7 @@ const values = listings
   )
   .join(",\n");
 
-const sql = `-- Seed data for cozy-stays — generated from src/lib/data.ts, do not edit the
+const sql = `-- Seed data for cozy-stays — generated from scripts/seed-listings.ts, do not edit the
 -- base VALUES block by hand. Re-runnable: truncates and repopulates everything.
 -- Run AFTER supabase/migrations/0001_init.sql, in the Supabase SQL Editor.
 

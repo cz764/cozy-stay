@@ -1,6 +1,6 @@
 import { fetchListings } from "@/app/api/server";
-import { DEFAULT_LIMIT } from "@/lib/pagination";
-import { ListingQuery, ListingsPage } from "@/lib/types";
+import { DEFAULT_LIMIT } from "@/data/constants";
+import { ListingQuery, ListingsPage } from "@/data/types";
 import FeaturedStaysHeader from "../FeaturedStaysHeader/FeaturedStaysHeader";
 import ListingFeed from "../ListingFeed/ListingFeed";
 import ErrorDisplay from "../ErrorDisplay/ErrorDisplay";

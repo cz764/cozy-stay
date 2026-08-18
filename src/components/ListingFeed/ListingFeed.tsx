@@ -3,8 +3,8 @@
 import { useCallback, useState } from "react";
 
 import { fetchListings } from "@/app/api";
-import { DEFAULT_LIMIT } from "@/lib/pagination";
-import { Listing, ListingQuery, ListingsPage } from "@/lib/types";
+import { DEFAULT_LIMIT } from "@/data/constants";
+import { Listing, ListingQuery, ListingsPage } from "@/data/types";
 import { Button } from "@/components/ui/button";
 import { ListingGrid } from "../ListingGrid/ListingGrid";
 import ListingGridSkeleton from "../ListingGrid/ListingGridSkeleton";

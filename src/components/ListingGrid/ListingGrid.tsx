@@ -1,6 +1,5 @@
-import { Listing } from "@/lib/types";
+import { Listing } from "@/data/types";
 import { ListingCard } from "@/components/ListingCard/ListingCard";
-import { ListingCardSkeleton } from "@/components/ListingCard/ListingCardSkeleton";
 
 interface ListingGridProps {
   listings: Listing[];
