@@ -5,6 +5,7 @@ import {
   Bricolage_Grotesque,
   Roboto,
 } from "next/font/google";
+import BackToTop from "@/components/BackToTop/BackToTop";
 import { Header } from "@/components/Header/Header";
 import { SearchBar } from "@/components/SearchBar/SearchBar";
 import { SearchBarSkeleton } from "@/components/SearchBar/SearchBarSkeleton";
@@ -59,6 +60,8 @@ export default function RootLayout({
           <main className="mx-auto w-[90vw] max-w-[1920px] px-6 py-10">
             {children}
           </main>
+
+          <BackToTop />
         </div>
       </body>
     </html>

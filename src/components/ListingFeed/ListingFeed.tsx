@@ -3,7 +3,7 @@
 import { useCallback, useState } from "react";
 
 import { fetchListings } from "@/app/api";
-import { DEFAULT_LIMIT } from "@/data/constants";
+import { AUTO_LOAD_PAGES, DEFAULT_LIMIT } from "@/data/constants";
 import { Listing, ListingQuery, ListingsPage } from "@/data/types";
 import { Button } from "@/components/ui/button";
 import { ListingGrid } from "../ListingGrid/ListingGrid";
@@ -28,6 +28,8 @@ export default function ListingFeed({ initialPage, query }: ListingFeedProps) {
   const [hasMore, setHasMore] = useState(initialPage.hasNextPage);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  /** Sentinel-triggered fetches since the last explicit "Load more" click. */
+  const [autoLoads, setAutoLoads] = useState(0);
 
   const { location, guests } = query;
 
@@ -63,7 +65,8 @@ export default function ListingFeed({ initialPage, query }: ListingFeedProps) {
    * Callback ref on the sentinel. React 19 runs the returned cleanup when the
    * node unmounts or this callback's identity changes, so no `useEffect` is
    * involved — and no `hasMore`/`error` guard either, since `renderFooter`
-   * already only mounts the sentinel when there is a next page to fetch.
+   * already only mounts the sentinel when there is a next page to fetch and
+   * the auto-load budget isn't spent.
    *
    * The page cursor flows in through `loadNextPage`, so each rebuild closes
    * over the current position in the result set.
@@ -78,6 +81,7 @@ export default function ListingFeed({ initialPage, query }: ListingFeedProps) {
           // Disconnect immediately so a burst of intersections during a fast
           // scroll can't fire two requests for the same offset.
           observer.disconnect();
+          setAutoLoads((count) => count + 1);
           void loadNextPage();
         },
         // Start fetching before the sentinel is actually visible, so the next
@@ -117,6 +121,23 @@ export default function ListingFeed({ initialPage, query }: ListingFeedProps) {
     }
 
     if (hasMore) {
+      // After AUTO_LOAD_PAGES sentinel fetches, pause behind a button so the
+      // feed can't be doom-scrolled — a click buys another auto-load run.
+      if (autoLoads >= AUTO_LOAD_PAGES) {
+        return (
+          <div className="mt-8 text-center">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setAutoLoads(0);
+                void loadNextPage();
+              }}
+            >
+              Load more stays
+            </Button>
+          </div>
+        );
+      }
       return <div ref={observeSentinel} aria-hidden="true" />;
     }
 

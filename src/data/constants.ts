@@ -7,3 +7,10 @@ export const DEFAULT_LIMIT = 24;
 
 /** Upper bound so a hand-crafted `?limit=99999` can't ask for the world. */
 export const MAX_LIMIT = 60;
+
+/**
+ * How many pages infinite scroll fetches on its own before pausing behind a
+ * "Load more" button — a deliberate click every ~144 cards breaks the
+ * doom-scroll loop without making deep browsing tedious.
+ */
+export const AUTO_LOAD_PAGES = 6;

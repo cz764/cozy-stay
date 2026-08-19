@@ -9,7 +9,8 @@ export default function FeaturedStaysHeader({
   guests,
   total,
 }: FeaturedStaysHeaderProps) {
-  const staysText = total === 1 ? "stay" : "stays";
+  const staysText =
+    total === 1 ? "stay" : `${location || guests ? total : ""} stays`;
   const locationText = location ? ` in “${location}”` : "";
   const guestText = guests ? `up to ${guests} guests` : "";
 
