@@ -35,16 +35,17 @@ export default function BackToTop() {
       variant="secondary"
       size="icon-lg"
       aria-label="Return to top"
-      aria-hidden={!visible}
-      tabIndex={visible ? 0 : -1}
+      // Kept mounted so the opacity transition runs both ways; `inert` hides
+      // the invisible button from clicks, focus, and assistive tech in one go
+      // (and unlike aria-hidden, it may legally land on a focused element —
+      // the case where the button itself was clicked to reach the top).
+      inert={!visible}
       onClick={scrollToTop}
       className={cn(
         // hover:bg-border replaces the variant's translucent hover with a
         // darker step of the same stone hue.
         "fixed right-6 bottom-6 z-50 rounded-full border shadow-lg transition-[opacity,background-color] duration-300 hover:bg-border",
-        // Kept mounted so the opacity transition runs both ways;
-        // pointer-events-none stops the invisible button from eating clicks.
-        visible ? "opacity-100" : "pointer-events-none opacity-0",
+        visible ? "opacity-100" : "opacity-0",
       )}
     >
       <ArrowUp />
