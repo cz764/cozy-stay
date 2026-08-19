@@ -8,6 +8,13 @@ interface ListingGridProps {
 const gridClassName =
   "grid grid-cols-1 gap-x-4 gap-y-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 2xl:grid-cols-6";
 
+/**
+ * One full row on the widest grid (6 columns). The LCP image is always in the
+ * first visible row, so preloading these keeps it eager on every viewport; the
+ * cost is a few over-preloaded images on narrow screens.
+ */
+const PRIORITY_CARD_COUNT = 6;
+
 export function ListingGrid({ listings }: ListingGridProps) {
   if (listings.length === 0) {
     return (
@@ -24,8 +31,12 @@ export function ListingGrid({ listings }: ListingGridProps) {
 
   return (
     <div className={gridClassName}>
-      {listings.map((listing) => (
-        <ListingCard key={listing.id} listing={listing} />
+      {listings.map((listing, index) => (
+        <ListingCard
+          key={listing.id}
+          listing={listing}
+          priority={index < PRIORITY_CARD_COUNT}
+        />
       ))}
     </div>
   );

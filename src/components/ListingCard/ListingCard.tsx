@@ -7,6 +7,8 @@ import { Listing } from "@/data/types";
 
 interface ListingCardProps {
   listing: Listing;
+  /** Above-the-fold cards preload their image instead of lazy-loading it. */
+  priority?: boolean;
 }
 
 /**
@@ -16,6 +18,7 @@ interface ListingCardProps {
  */
 export const ListingCard = memo(function ListingCard({
   listing,
+  priority = false,
 }: ListingCardProps) {
   const { title, location, image, pricePerNight, rating } = listing;
 
@@ -26,6 +29,7 @@ export const ListingCard = memo(function ListingCard({
           src={image}
           alt={title}
           fill
+          priority={priority}
           sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, (max-width: 1024px) 33vw, (max-width: 1280px) 25vw, (max-width: 1536px) 20vw, 16vw"
           className="object-cover"
         />
