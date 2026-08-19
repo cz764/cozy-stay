@@ -30,6 +30,8 @@ export default function ListingFeed({ initialPage, query }: ListingFeedProps) {
   const [error, setError] = useState<string | null>(null);
   /** Sentinel-triggered fetches since the last explicit "Load more" click. */
   const [autoLoads, setAutoLoads] = useState(0);
+  /** Written on every fetch transition; read only by the sr-only live region. */
+  const [announcement, setAnnouncement] = useState("");
 
   const { location, guests } = query;
 
@@ -43,6 +45,7 @@ export default function ListingFeed({ initialPage, query }: ListingFeedProps) {
    */
   const loadNextPage = useCallback(async () => {
     setIsLoading(true);
+    setAnnouncement("Loading more stays");
     try {
       const nextPage = await fetchListings({
         location,
@@ -53,13 +56,27 @@ export default function ListingFeed({ initialPage, query }: ListingFeedProps) {
       setItems((previous) => [...previous, ...nextPage.listings]);
       setCursor(nextPage.endCursor);
       setHasMore(nextPage.hasNextPage);
+      // The running total keeps consecutive announcements distinct — a live
+      // region only speaks when its text actually changes, so a repeated
+      // "24 more stays loaded" would be silent after the first page.
+      const total = items.length + nextPage.listings.length;
+      setAnnouncement(
+        nextPage.hasNextPage
+          ? `${nextPage.listings.length} more stays loaded, ${total} shown.`
+          : `You've seen all ${total} stays.`,
+      );
     } catch (ex) {
       console.error(ex);
-      setError(ex instanceof Error ? ex.message : "Could not load more stays.");
+      const message =
+        ex instanceof Error ? ex.message : "Could not load more stays.";
+      setError(message);
+      setAnnouncement(message);
     } finally {
       setIsLoading(false);
     }
-  }, [location, guests, cursor]);
+    // items.length changes exactly when cursor does, so including it adds no
+    // extra identity churn.
+  }, [location, guests, cursor, items.length]);
 
   /**
    * Callback ref on the sentinel. React 19 runs the returned cleanup when the
@@ -157,7 +174,7 @@ export default function ListingFeed({ initialPage, query }: ListingFeedProps) {
       {/* Stays mounted in every state — a live region only announces changes
           that happen while it is already in the DOM. */}
       <div aria-live="polite" className="sr-only">
-        {isLoading ? "Loading more stays" : ""}
+        {announcement}
       </div>
 
       {renderFooter()}
