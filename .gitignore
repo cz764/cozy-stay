@@ -31,3 +31,6 @@ next-env.d.ts
 # Exceptions to keep useful team settings
 !.vscode/extensions.json
 !.vscode/settings.json
+
+# Supabase CLI local state
+supabase/.temp/
