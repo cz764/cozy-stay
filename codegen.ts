@@ -6,7 +6,7 @@ loadEnv({ path: ".env.local" });
 
 const config: CodegenConfig = {
   // Introspects the live Supabase endpoint — requires the schema comment
-  // directive from supabase/migrations/0002_graphql_config.sql.
+  // directive from supabase/migrations/20260818145713_graphql_config.sql.
   schema: [
     {
       [`${process.env.SUPABASE_URL}/graphql/v1`]: {
