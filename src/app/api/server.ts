@@ -1,7 +1,8 @@
 import { graphql } from "@/gql";
 import type { ListingsFilter } from "@/gql/graphql";
 import { DEFAULT_LIMIT, MAX_LIMIT } from "@/data/constants";
-import type { ListingsPage } from "@/data/types";
+import type { ListingDetail, ListingsPage } from "@/data/types";
+import { toListing } from "@/utils";
 import { executeGraphQL } from "./graphql";
 import type { FetchListingsParams } from ".";
 
@@ -26,6 +27,35 @@ export const ListingCardFields = graphql(`
       edges {
         node {
           url
+        }
+      }
+    }
+  }
+`);
+
+const ListingDetailQuery = graphql(`
+  query ListingDetail($id: BigInt!) {
+    listingsCollection(first: 1, filter: { id: { eq: $id } }) {
+      edges {
+        node {
+          ...ListingCardFields
+          description
+          hostName
+          hostAvatarUrl
+          hostIsSuperhost
+          hostJoinedYear
+          # Aliased: the spread fragment already selects this collection with
+          # first: 1, and un-aliased re-selection with different arguments
+          # would be a field conflict.
+          gallery: listingImagesCollection(
+            orderBy: [{ sortOrder: AscNullsLast }]
+          ) {
+            edges {
+              node {
+                url
+              }
+            }
+          }
         }
       }
     }
@@ -110,25 +140,36 @@ export async function fetchListings({
   }
 
   return {
-    listings: collection.edges.map(({ node }) => ({
-      // BigInt and numeric arrive as strings over GraphQL; the UI type keeps
-      // id a string and rating a number.
-      id: String(node.id),
-      title: node.title,
-      location: node.location,
-      image: node.listingImagesCollection?.edges[0]?.node.url ?? "",
-      pricePerNight: node.pricePerNight,
-      rating: Number(node.rating),
-      reviewCount: node.reviewCount,
-      maxGuests: node.maxGuests,
-      amenities: {
-        laundry: node.laundry,
-        petsFriendly: node.petsFriendly,
-        ac: node.ac,
-      },
-    })),
+    listings: collection.edges.map(({ node }) => toListing(node)),
     totalCount: collection.totalCount,
     endCursor: collection.pageInfo.endCursor ?? null,
     hasNextPage: collection.pageInfo.hasNextPage,
+  };
+}
+
+/**
+ * Fetches one listing with the detail-page extras. Returns null when nothing
+ * matches — including syntactically invalid ids from hand-typed URLs, which
+ * are rejected here rather than sent to pg_graphql to fail a BigInt parse.
+ */
+export async function fetchListingById(
+  id: string,
+): Promise<ListingDetail | null> {
+  if (!/^\d+$/.test(id)) return null;
+
+  const data = await executeGraphQL(ListingDetailQuery, { id });
+  const node = data.listingsCollection?.edges[0]?.node;
+  if (!node) return null;
+
+  return {
+    ...toListing(node),
+    description: node.description,
+    images: node.gallery?.edges.map(({ node: image }) => image.url) ?? [],
+    host: {
+      name: node.hostName,
+      avatarUrl: node.hostAvatarUrl,
+      isSuperhost: node.hostIsSuperhost,
+      joinedYear: node.hostJoinedYear,
+    },
   };
 }

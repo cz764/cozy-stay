@@ -11,6 +11,11 @@ const nextConfig: NextConfig = {
         protocol: "https",
         hostname: "images.unsplash.com",
       },
+      {
+        // Host avatars on the listing detail page.
+        protocol: "https",
+        hostname: "i.pravatar.cc",
+      },
     ],
   },
 };

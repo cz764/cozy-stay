@@ -15,6 +15,21 @@ export interface Listing {
   };
 }
 
+/**
+ * Everything the detail page shows on top of the card projection. `image`
+ * (inherited) is the cover shot; `images` is the full gallery including it.
+ */
+export interface ListingDetail extends Listing {
+  description: string;
+  images: string[];
+  host: {
+    name: string;
+    avatarUrl: string;
+    isSuperhost: boolean;
+    joinedYear: number;
+  };
+}
+
 export interface ListingQuery {
   location?: string;
   guests?: string;

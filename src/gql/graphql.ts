@@ -112,6 +112,13 @@ export type StringFilter = {
 
 export type ListingCardFieldsFragment = { id: unknown, title: string, location: string, pricePerNight: number, rating: unknown, reviewCount: number, maxGuests: number, laundry: boolean, petsFriendly: boolean, ac: boolean, listingImagesCollection: { edges: Array<{ node: { url: string } }> } | null };
 
+export type ListingDetailQueryVariables = Exact<{
+  id: unknown;
+}>;
+
+
+export type ListingDetailQuery = { listingsCollection: { edges: Array<{ node: { description: string, hostName: string, hostAvatarUrl: string, hostIsSuperhost: boolean, hostJoinedYear: number, id: unknown, title: string, location: string, pricePerNight: number, rating: unknown, reviewCount: number, maxGuests: number, laundry: boolean, petsFriendly: boolean, ac: boolean, gallery: { edges: Array<{ node: { url: string } }> } | null, listingImagesCollection: { edges: Array<{ node: { url: string } }> } | null } }> } };
+
 export type ListingFeedQueryVariables = Exact<{
   first: number;
   after?: unknown;
@@ -160,6 +167,47 @@ export const ListingCardFieldsFragmentDoc = new TypedDocumentString(`
   }
 }
     `, {"fragmentName":"ListingCardFields"}) as unknown as TypedDocumentString<ListingCardFieldsFragment, unknown>;
+export const ListingDetailDocument = new TypedDocumentString(`
+    query ListingDetail($id: BigInt!) {
+  listingsCollection(first: 1, filter: {id: {eq: $id}}) {
+    edges {
+      node {
+        ...ListingCardFields
+        description
+        hostName
+        hostAvatarUrl
+        hostIsSuperhost
+        hostJoinedYear
+        gallery: listingImagesCollection(orderBy: [{sortOrder: AscNullsLast}]) {
+          edges {
+            node {
+              url
+            }
+          }
+        }
+      }
+    }
+  }
+}
+    fragment ListingCardFields on Listings {
+  id
+  title
+  location
+  pricePerNight
+  rating
+  reviewCount
+  maxGuests
+  laundry
+  petsFriendly
+  ac
+  listingImagesCollection(first: 1, orderBy: [{sortOrder: AscNullsLast}]) {
+    edges {
+      node {
+        url
+      }
+    }
+  }
+}`) as unknown as TypedDocumentString<ListingDetailQuery, ListingDetailQueryVariables>;
 export const ListingFeedDocument = new TypedDocumentString(`
     query ListingFeed($first: Int!, $after: Cursor, $filter: ListingsFilter) {
   listingsCollection(
