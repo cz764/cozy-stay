@@ -83,6 +83,7 @@ const ListingFeedQuery = graphql(`
 export async function fetchListings({
   location,
   guests,
+  ids,
   after,
   first,
 }: FetchListingsParams): Promise<ListingsPage> {
@@ -109,6 +110,14 @@ export async function fetchListings({
   }
   if (guestCount !== undefined) {
     conditions.push({ maxGuests: { gte: guestCount } });
+  }
+  if (ids !== undefined) {
+    // Drop malformed ids rather than let pg_graphql fail the whole query;
+    // an empty list still has to match nothing, not everything.
+    const validIds = ids.filter((id) => /^\d+$/.test(id));
+    conditions.push(
+      validIds.length > 0 ? { id: { in: validIds } } : { id: { eq: "-1" } },
+    );
   }
 
   const data = await executeGraphQL(ListingFeedQuery, {

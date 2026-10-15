@@ -1,0 +1,125 @@
+{
+  "meta": {
+    "title": "cozystay — Escape and relax",
+    "description": "Find your next cozy home to escape from chaos of life and relax to recharge for next destinations.",
+    "pageTitle": "{page} — cozystay",
+    "listingDescription": "{title} in {location}, from ${price} a night.",
+    "notFoundTitle": "Stay not found — cozystay"
+  },
+  "header": {
+    "stays": "Stays",
+    "experiences": "Experiences",
+    "tagline": "Escape and relax",
+    "language": "Change language",
+    "menu": "Open menu",
+    "wishlist": "Wishlist",
+    "profile": "Profile",
+    "login": "Log in"
+  },
+  "language": {
+    "title": "Choose a language",
+    "description": "cozystay is shown in your chosen language on this device.",
+    "current": "Current language"
+  },
+  "search": {
+    "where": "Where",
+    "wherePlaceholder": "Search destinations",
+    "who": "Who",
+    "whoPlaceholder": "How many guests",
+    "submit": "Search"
+  },
+  "featured": {
+    "all": "Featured stays",
+    "count": {
+      "one": "Featured stay",
+      "other": "Featured {count} stays"
+    },
+    "inLocation": " in “{location}”",
+    "upToGuests": " up to {count} guests"
+  },
+  "feed": {
+    "searching": "Searching stays...",
+    "loadingMore": "Loading more stays",
+    "loaded": {
+      "one": "1 more stay loaded, {total} shown.",
+      "other": "{count} more stays loaded, {total} shown."
+    },
+    "seenAll": {
+      "one": "You’ve seen the only stay.",
+      "other": "You’ve seen all {count} stays."
+    },
+    "loadError": "Could not load more stays.",
+    "loadMore": "Load more stays",
+    "tryAgain": "Try again",
+    "emptyTitle": "No stays match your search",
+    "emptyBody": "Try a different destination or fewer guests.",
+    "loadFailed": "Something went wrong loading stays."
+  },
+  "card": {
+    "homeIn": "Home in {location}",
+    "pricePerNight": "${price} night",
+    "save": "Save {title} to wishlist"
+  },
+  "wishlist": {
+    "title": "Wishlist",
+    "count": {
+      "one": "{count} saved stay",
+      "other": "{count} saved stays"
+    },
+    "deviceNote": "Saved on this device. Log in to keep your wishlist across devices — coming soon.",
+    "emptyTitle": "No saved stays yet",
+    "emptyBody": "Tap the heart on any stay to keep it here.",
+    "browse": "Browse stays",
+    "loadError": "Could not load your wishlist.",
+    "tryAgain": "Try again"
+  },
+  "listing": {
+    "reviews": {
+      "one": "{count} review",
+      "other": "{count} reviews"
+    },
+    "photoAlt": "{title} in {location} — photo {number}",
+    "about": "About this home",
+    "amenitiesTitle": "What this place offers",
+    "laundry": "Laundry",
+    "petsWelcome": "Pets welcome",
+    "airConditioning": "Air conditioning",
+    "hostedBy": "Hosted by {name}",
+    "superhost": "Superhost",
+    "hostingSince": "Hosting since {year}",
+    "price": "Price",
+    "save": "Save",
+    "saved": "Saved",
+    "night": "night",
+    "sleeps": {
+      "one": "Sleeps up to {count} guest",
+      "other": "Sleeps up to {count} guests"
+    },
+    "notFoundTitle": "This stay doesn’t exist",
+    "notFoundBody": "It may have been removed, or the link is wrong.",
+    "browseAll": "Browse all stays"
+  },
+  "error": {
+    "title": "Something went wrong.",
+    "body": "We couldn’t load this page. Please try again in a moment.",
+    "reference": "Reference: {digest}",
+    "retryHint": "Please try again in a moment.",
+    "tryAgain": "Try again"
+  },
+  "backToTop": "Return to top",
+  "comingSoon": {
+    "badge": "Coming soon",
+    "backHome": "Back to stays",
+    "profile": {
+      "title": "Profile",
+      "body": "Your details, past trips, and preferences will live here."
+    },
+    "login": {
+      "title": "Log in",
+      "body": "Sign in to sync your wishlist and bookings across devices."
+    }
+  },
+  "dialog": {
+    "close": "Close"
+  }
+}

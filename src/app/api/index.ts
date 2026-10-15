@@ -1,6 +1,8 @@
 import type { ListingQuery, ListingsPage } from "@/data/types";
 
 export interface FetchListingsParams extends ListingQuery {
+  // Restrict to these listing ids (wishlist); other filters still apply.
+  ids?: string[];
   // The previous page's endCursor; omit for the first page.
   after?: string;
   first?: number;
@@ -10,10 +12,15 @@ export interface FetchListingsParams extends ListingQuery {
 export async function fetchListings({
   location,
   guests,
+  ids,
   after,
   first,
 }: FetchListingsParams): Promise<ListingsPage> {
   const params = new URLSearchParams();
+
+  if (ids?.length) {
+    params.set("ids", ids.join(","));
+  }
 
   if (location) {
     params.set("location", location);

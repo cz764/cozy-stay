@@ -1,0 +1,125 @@
+{
+  "meta": {
+    "title": "cozystay — 逃离喧嚣，放松身心",
+    "description": "找到你的下一个温馨居所，逃离生活的纷扰，放松充电，再出发。",
+    "pageTitle": "{page} — cozystay",
+    "listingDescription": "位于{location}的{title}，每晚 ${price} 起。",
+    "notFoundTitle": "找不到房源 — cozystay"
+  },
+  "header": {
+    "stays": "房源",
+    "experiences": "体验",
+    "tagline": "逃离喧嚣，放松身心",
+    "language": "切换语言",
+    "menu": "打开菜单",
+    "wishlist": "心愿单",
+    "profile": "个人资料",
+    "login": "登录"
+  },
+  "language": {
+    "title": "选择语言",
+    "description": "cozystay 将在此设备上以你选择的语言显示。",
+    "current": "当前语言"
+  },
+  "search": {
+    "where": "地点",
+    "wherePlaceholder": "搜索目的地",
+    "who": "人数",
+    "whoPlaceholder": "几位房客",
+    "submit": "搜索"
+  },
+  "featured": {
+    "all": "精选房源",
+    "count": {
+      "one": "精选房源 {count} 个",
+      "other": "精选房源 {count} 个"
+    },
+    "inLocation": "（“{location}”）",
+    "upToGuests": "，可住 {count} 人"
+  },
+  "feed": {
+    "searching": "正在搜索房源...",
+    "loadingMore": "正在加载更多房源",
+    "loaded": {
+      "one": "已加载 {count} 个房源，共显示 {total} 个。",
+      "other": "已加载 {count} 个房源，共显示 {total} 个。"
+    },
+    "seenAll": {
+      "one": "已浏览全部 {count} 个房源。",
+      "other": "已浏览全部 {count} 个房源。"
+    },
+    "loadError": "无法加载更多房源。",
+    "loadMore": "加载更多房源",
+    "tryAgain": "重试",
+    "emptyTitle": "没有符合条件的房源",
+    "emptyBody": "试试其他目的地或减少房客人数。",
+    "loadFailed": "加载房源时出了点问题。"
+  },
+  "card": {
+    "homeIn": "{location}的民宿",
+    "pricePerNight": "${price}/晚",
+    "save": "将{title}加入心愿单"
+  },
+  "wishlist": {
+    "title": "心愿单",
+    "count": {
+      "one": "已收藏 {count} 个房源",
+      "other": "已收藏 {count} 个房源"
+    },
+    "deviceNote": "仅保存在此设备上。登录后可在所有设备同步心愿单（即将推出）。",
+    "emptyTitle": "还没有收藏的房源",
+    "emptyBody": "点击任意房源上的爱心即可收藏到这里。",
+    "browse": "浏览房源",
+    "loadError": "无法加载你的心愿单。",
+    "tryAgain": "重试"
+  },
+  "listing": {
+    "reviews": {
+      "one": "{count} 条评价",
+      "other": "{count} 条评价"
+    },
+    "photoAlt": "位于{location}的{title} — 照片 {number}",
+    "about": "关于此房源",
+    "amenitiesTitle": "房源设施",
+    "laundry": "洗衣设备",
+    "petsWelcome": "允许携带宠物",
+    "airConditioning": "空调",
+    "hostedBy": "房东：{name}",
+    "superhost": "超赞房东",
+    "hostingSince": "{year} 年起接待房客",
+    "price": "价格",
+    "save": "收藏",
+    "saved": "已收藏",
+    "night": "/晚",
+    "sleeps": {
+      "one": "最多可住 {count} 位房客",
+      "other": "最多可住 {count} 位房客"
+    },
+    "notFoundTitle": "此房源不存在",
+    "notFoundBody": "它可能已被移除，或链接有误。",
+    "browseAll": "浏览全部房源"
+  },
+  "error": {
+    "title": "出了点问题。",
+    "body": "无法加载此页面，请稍后重试。",
+    "reference": "参考编号：{digest}",
+    "retryHint": "请稍后重试。",
+    "tryAgain": "重试"
+  },
+  "backToTop": "返回顶部",
+  "comingSoon": {
+    "badge": "即将推出",
+    "backHome": "返回房源列表",
+    "profile": {
+      "title": "个人资料",
+      "body": "你的资料、历史行程和偏好设置将显示在这里。"
+    },
+    "login": {
+      "title": "登录",
+      "body": "登录后可在所有设备间同步心愿单和预订。"
+    }
+  },
+  "dialog": {
+    "close": "关闭"
+  }
+}

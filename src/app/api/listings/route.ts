@@ -8,6 +8,7 @@ export async function GET(request: NextRequest) {
   const page = await fetchListings({
     location: searchParams.get("location") ?? undefined,
     guests: searchParams.get("guests") ?? undefined,
+    ids: searchParams.get("ids")?.split(",").filter(Boolean),
     after: searchParams.get("after") ?? undefined,
     first: readCount(searchParams.get("first")),
   });

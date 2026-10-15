@@ -1,5 +1,14 @@
 # Project guidance
 
+## Product
+
+- Treat 'cozystay' as it's own brand logo, make sure when we refer it in codebase and text, they are consistent.
+
+## Developer
+
+- When working on features, create a feature branch locally. Leave commit on user, unless asked to do so.
+- After each change, show a summary on what has changed, why this decision, and how it works.
+
 ## Components style
 
 - Use function to define components instead of const. When defining variable and handler functions inside component, use const.

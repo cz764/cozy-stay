@@ -1,7 +1,8 @@
 # Cozy Stays
 
 An Airbnb-style stays app: a landing page with a search bar and an
-infinite-scroll grid of cozy listing cards, plus a `/listing/[id]` detail page.
+infinite-scroll grid of cozy listing cards, a `/listing/[id]` detail page, an
+anonymous wishlist, and a UI in English, Spanish, French and Simplified Chinese.
 Built with **Next.js 15 (App Router) · React 19 · Tailwind CSS v4 · shadcn/ui**,
 backed by **Supabase (pg_graphql)** with typed queries from **GraphQL Code
 Generator**.
@@ -38,6 +39,40 @@ result is a shareable link:
 See [API](#api) for how pagination fits alongside this — it's the one piece of
 state deliberately kept out of the URL.
 
+## Language
+
+Every rendered string goes through `t()` with a key into one JSON catalog per
+locale in `src/i18n/messages/` (`en`, `es`, `fr`, `zh-CN`; BCP 47 tags). No
+i18n library: `createT` does `{var}` interpolation and CLDR plural forms via
+`Intl.PluralRules`, and the key type is derived from `en.json`, so a typo or a
+key missing from another catalog is a build error. Server components call
+`await getT()`; client components call `useT()` from the `I18nProvider` the
+root layout mounts with the active catalog.
+
+Resolution order, implemented once in `src/middleware.ts`:
+
+1. `?lg=fr` on any URL — a shareable link; it is also persisted to the cookie.
+2. The `lg` cookie — set by the link above or by the language dialog
+   (Globe button, or **Language** in the menu on phones), through a server
+   action followed by `router.refresh()` so the layout re-renders in place.
+3. `en`.
+
+The middleware forwards the result in an `x-locale` request header, which is
+what `getLocale()` reads, and `<html lang>` and page metadata follow it. Only
+UI chrome is translated: listing titles and descriptions come from the
+database in English.
+
+## Wishlist
+
+Hearts on cards and the **Save** pill on the detail page toggle a listing id in
+`localStorage` (`cozystay.wishlist`, newest first) via `useWishlist`, which
+wraps `useSyncExternalStore` so server HTML renders empty hearts and hydration
+fills them without a mismatch. `/wishlist` reads the ids, fetches them through
+`GET /api/listings?ids=…` and renders the normal grid. Un-saving on that page
+leaves the card in place (heart emptied) until the next visit, so the click can
+be undone. The list lives on one device until accounts exist; see
+[Next steps](#next-steps).
+
 ## API
 
 The backend is Supabase pg_graphql, reached only from the server through
@@ -58,6 +93,7 @@ GET /api/listings?location=lisbon&guests=4&after=<cursor>&first=12
 | ---------- | -------- | ------- | ----------------------------------------------------- |
 | `location` | string   | —       | Case-insensitive match on listing location or title   |
 | `guests`   | number   | —       | Matches listings with `maxGuests >= guests`           |
+| `ids`      | csv ids  | —       | Only these listings (wishlist); malformed ids dropped |
 | `after`    | cursor   | —       | Opaque; the previous page's `endCursor`. Omit for p.1 |
 | `first`    | int 1–60 | `24`    | Clamped to `MAX_LIMIT`; malformed values fall back    |
 
@@ -65,9 +101,7 @@ GET /api/listings?location=lisbon&guests=4&after=<cursor>&first=12
 
 ```jsonc
 {
-  "listings": [
-    /* this slice only */
-  ],
+  "listings": [/* this slice only */],
   "totalCount": 37, // matches for the whole query, not just this slice
   "endCursor": "WzI0XQ==", // pass as `after` to fetch the next page
   "hasNextPage": true,
@@ -124,11 +158,29 @@ src/
       server.ts                     GraphQL documents + fetchListings/fetchListingById (server-only)
       graphql.ts                    executeGraphQL() — fetch wrapper for Supabase pg_graphql
       listings/route.ts             GET /api/listings — HTTP edge over server.ts
-    layout.tsx                      Root layout + fonts, header, search bar, BackToTop
+    wishlist/page.tsx               Saved stays (client-fetched from localStorage ids)
+    profile/page.tsx                Coming soon
+    login/page.tsx                  Coming soon
+    layout.tsx                      Root layout + fonts, locale provider, header, search bar
     globals.css                     Tailwind v4 + shadcn theme tokens (warm coral palette)
     error.tsx                       Route error boundary
+  middleware.ts                     Resolves the locale from ?lg= / cookie, sets the header
+  i18n/
+    config.ts                       Locale list, cookie/param names
+    translate.ts                    createT() + MessageKey type derived from en.json
+    server.ts / client.tsx          getT()/getLocale() for RSC; I18nProvider + useT() for client
+    actions.ts                      setLocale server action (writes the cookie)
+    messages/*.json                 One catalog per locale
+  hooks/useWishlist.ts              localStorage-backed wishlist store
   components/                       One directory per component, skeleton alongside
-    Header/Header.tsx
+    Header/
+      Header.tsx                    Server shell: logo, nav, tagline
+      HeaderActions.tsx             Client: globe, user menu (Wishlist/Profile/Language/Log in)
+      LanguageDialog.tsx            Radix dialog listing the locales
+    Logo/Logo.tsx                   The cozystay wordmark — render the brand only through this
+    ComingSoon/ComingSoon.tsx       Placeholder body for routes that exist before their feature
+    WishlistButton/WishlistButton.tsx  Heart (overlay) or Save pill (inline), aria-pressed
+    WishlistFeed/WishlistFeed.tsx   Client: ids → /api/listings?ids → ListingGrid
     SearchBar/
       SearchBar.tsx                 Client; owns the search inputs + URL push
       SearchBarSkeleton.tsx         Static replica used as the Suspense fallback
@@ -158,7 +210,7 @@ src/
     BackToTop/BackToTop.tsx
     ErrorDisplay/ErrorDisplay.tsx   Shown when the fetch throws
     icons/CozyHeart.tsx             Inline SVG heart
-    ui/                             shadcn components (button, input, card, badge)
+    ui/                             shadcn components (button, input, card, badge, dialog, dropdown-menu)
   data/
     types.ts                        Listing, ListingDetail, ListingQuery, ListingsPage
     constants.ts                    DEFAULT_LIMIT / MAX_LIMIT / AUTO_LOAD_PAGES
@@ -171,6 +223,25 @@ scripts/                            Seed data + generator
 ```
 
 ## Next steps
+
+### Accounts: authentication, then profile
+
+The header menu already links to `/login` and `/profile`, which render
+`ComingSoon`. The order is auth first because a profile is "the signed-in
+user's data" and has nothing to show before it. Decisions taken so far, in
+`doc/DECISIONS.md` under _Accounts roadmap_:
+
+- **Supabase Auth through `@supabase/ssr`**, server-side only: email/password
+  and OAuth flows run in server actions and a `/auth/callback` route handler,
+  with the session in cookies. This keeps the existing rule that Supabase
+  credentials never reach the browser bundle.
+- **Wishlist moves to a `wishlists` table** keyed by `auth.uid()` with row-level
+  security, added as a CLI migration. On first login the anonymous
+  `localStorage` list is merged in, then cleared. `useWishlist` keeps its
+  shape; only the store behind it changes.
+- **Profile** then becomes display name, avatar and a link to the wishlist,
+  read from `auth.users` metadata — small by design.
+- The menu's **Log in** item becomes **Log out** when a session exists.
 
 - A filter sidebar — **ratings, location, laundry, pets-friendly, AC** — that
   writes to the same query string (e.g. `?minRating=4.8&laundry=true&pets=true`),

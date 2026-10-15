@@ -32,16 +32,25 @@
   --radius-xl: calc(var(--radius) + 4px);
 
   /* Body text (default) */
-  --font-sans: var(--font-roboto), ui-sans-serif, system-ui, sans-serif;
+  --font-sans: var(--font-roboto), ui-sans-serif, system-ui, var(--font-cjk),
+    sans-serif;
   /* Titles / headings -> apply with the `font-heading` class */
-  --font-heading: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-bricolage), ui-sans-serif, system-ui,
+    var(--font-cjk), sans-serif;
   /* Brand / logo -> apply with the `font-brand` class */
-  --font-brand: var(--font-playwrite), ui-serif, cursive;
+  --font-brand: var(--font-playwrite), var(--font-cjk-brand), ui-serif, cursive;
 }
 
 :root {
   /* Generous radius for the cozy, rounded feel */
   --radius: 0.875rem;
+
+  /* The web fonts carry no CJK glyphs; browsers fall through per glyph, so
+     Simplified Chinese renders in the platform's own CJK face and Latin text
+     keeps the chosen fonts. Kaiti keeps the brand tagline's handwritten feel. */
+  --font-cjk: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei",
+    "Noto Sans CJK SC";
+  --font-cjk-brand: "Kaiti SC", "STKaiti", "KaiTi";
 
   --background: oklch(1 0 0);
   --foreground: oklch(0.21 0.006 56);
@@ -90,6 +99,7 @@
   h4,
   h5,
   h6 {
-    font-family: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-bricolage), ui-sans-serif, system-ui, var(--font-cjk),
+      sans-serif;
   }
 }

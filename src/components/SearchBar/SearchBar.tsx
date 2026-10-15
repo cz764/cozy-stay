@@ -9,8 +9,10 @@ import {
   SearchField,
   SearchDivider,
 } from "@/components/SearchField/SearchField";
+import { useT } from "@/i18n/client";
 
 export function SearchBar() {
+  const t = useT();
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -33,25 +35,28 @@ export function SearchBar() {
       onSubmit={handleSubmit}
       className="flex w-full flex-col items-stretch gap-2 rounded-2xl border bg-background p-2 shadow-lg sm:flex-row sm:items-center sm:rounded-full sm:pl-4"
     >
-      <SearchField icon={<MapPin className="size-4" />} label="Where">
+      <SearchField
+        icon={<MapPin className="size-4" />}
+        label={t("search.where")}
+      >
         <input
           type="text"
           value={location}
           onChange={(e) => setLocation(e.target.value)}
-          placeholder="Search destinations"
+          placeholder={t("search.wherePlaceholder")}
           className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
         />
       </SearchField>
 
       <SearchDivider />
 
-      <SearchField icon={<Users className="size-4" />} label="Who">
+      <SearchField icon={<Users className="size-4" />} label={t("search.who")}>
         <input
           type="number"
           min={1}
           value={guests}
           onChange={(e) => setGuests(e.target.value)}
-          placeholder="How many guests"
+          placeholder={t("search.whoPlaceholder")}
           className="w-full bg-transparent text-sm outline-none placeholder:text-muted-foreground"
         />
       </SearchField>
@@ -62,7 +67,7 @@ export function SearchBar() {
         className="rounded-full sm:size-12 sm:p-0"
       >
         <Search className="size-5" />
-        <span className="sm:hidden">Search</span>
+        <span className="sm:hidden">{t("search.submit")}</span>
       </Button>
     </form>
   );

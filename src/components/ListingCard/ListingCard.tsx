@@ -3,18 +3,17 @@ import Image from "next/image";
 import Link from "next/link";
 import { Star } from "lucide-react";
 
-import { CozyHeart } from "@/components/icons/CozyHeart";
+import { WishlistButton } from "@/components/WishlistButton/WishlistButton";
 import { Listing } from "@/data/types";
+import { useT } from "@/i18n/client";
 
 interface ListingCardProps {
   listing: Listing;
   priority?: boolean;
 }
 
-function ListingCard({
-  listing,
-  priority = false,
-}: ListingCardProps) {
+function ListingCard({ listing, priority = false }: ListingCardProps) {
+  const t = useT();
   const { id, title, location, image, pricePerNight, rating } = listing;
 
   return (
@@ -41,23 +40,22 @@ function ListingCard({
 
         <h3 className="mt-2 truncate text-sm font-medium text-foreground">
           <span className="sr-only">{title}, </span>
-          Home in {location}
+          {t("card.homeIn", { location })}
         </h3>
 
         <p className="flex items-center gap-1 text-xs text-muted-foreground">
           <Star className="size-3 fill-muted-foreground text-muted-foreground" />
           <span>{rating.toFixed(2)}</span>
           <span aria-hidden="true">·</span>
-          <span>${pricePerNight} night</span>
+          <span>{t("card.pricePerNight", { price: pricePerNight })}</span>
         </p>
       </Link>
 
-      <button
-        aria-label={`Save ${title} to wishlist`}
-        className="absolute right-2 top-2 rounded-full p-2 text-white/90 outline-none transition-transform duration-200 hover:scale-108 focus-visible:ring-[3px] focus-visible:ring-ring/50"
-      >
-        <CozyHeart className="size-6 fill-black/50 stroke-white [stroke-width:2px]" />
-      </button>
+      <WishlistButton
+        id={id}
+        title={title}
+        className="absolute right-2 top-2"
+      />
     </article>
   );
 }

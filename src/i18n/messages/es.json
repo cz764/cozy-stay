@@ -1,0 +1,125 @@
+{
+  "meta": {
+    "title": "cozystay — Escapa y relájate",
+    "description": "Encuentra tu próximo hogar acogedor para escapar del caos de la vida y relajarte para recargar energías antes del próximo destino.",
+    "pageTitle": "{page} — cozystay",
+    "listingDescription": "{title} en {location}, desde ${price} por noche.",
+    "notFoundTitle": "Alojamiento no encontrado — cozystay"
+  },
+  "header": {
+    "stays": "Alojamientos",
+    "experiences": "Experiencias",
+    "tagline": "Escapa y relájate",
+    "language": "Cambiar idioma",
+    "menu": "Abrir menú",
+    "wishlist": "Favoritos",
+    "profile": "Perfil",
+    "login": "Iniciar sesión"
+  },
+  "language": {
+    "title": "Elige un idioma",
+    "description": "cozystay se mostrará en el idioma elegido en este dispositivo.",
+    "current": "Idioma actual"
+  },
+  "search": {
+    "where": "Dónde",
+    "wherePlaceholder": "Buscar destinos",
+    "who": "Quién",
+    "whoPlaceholder": "¿Cuántos huéspedes?",
+    "submit": "Buscar"
+  },
+  "featured": {
+    "all": "Alojamientos destacados",
+    "count": {
+      "one": "Alojamiento destacado",
+      "other": "{count} alojamientos destacados"
+    },
+    "inLocation": " en “{location}”",
+    "upToGuests": " para hasta {count} huéspedes"
+  },
+  "feed": {
+    "searching": "Buscando alojamientos...",
+    "loadingMore": "Cargando más alojamientos",
+    "loaded": {
+      "one": "1 alojamiento más cargado, {total} en pantalla.",
+      "other": "{count} alojamientos más cargados, {total} en pantalla."
+    },
+    "seenAll": {
+      "one": "Has visto el único alojamiento.",
+      "other": "Has visto los {count} alojamientos."
+    },
+    "loadError": "No se pudieron cargar más alojamientos.",
+    "loadMore": "Cargar más alojamientos",
+    "tryAgain": "Intentar de nuevo",
+    "emptyTitle": "Ningún alojamiento coincide con tu búsqueda",
+    "emptyBody": "Prueba otro destino o menos huéspedes.",
+    "loadFailed": "Algo salió mal al cargar los alojamientos."
+  },
+  "card": {
+    "homeIn": "Casa en {location}",
+    "pricePerNight": "${price} por noche",
+    "save": "Guardar {title} en favoritos"
+  },
+  "wishlist": {
+    "title": "Favoritos",
+    "count": {
+      "one": "{count} alojamiento guardado",
+      "other": "{count} alojamientos guardados"
+    },
+    "deviceNote": "Guardados en este dispositivo. Inicia sesión para conservar tus favoritos en todos tus dispositivos (próximamente).",
+    "emptyTitle": "Aún no has guardado alojamientos",
+    "emptyBody": "Toca el corazón de cualquier alojamiento para guardarlo aquí.",
+    "browse": "Explorar alojamientos",
+    "loadError": "No se pudieron cargar tus favoritos.",
+    "tryAgain": "Intentar de nuevo"
+  },
+  "listing": {
+    "reviews": {
+      "one": "{count} reseña",
+      "other": "{count} reseñas"
+    },
+    "photoAlt": "{title} en {location} — foto {number}",
+    "about": "Acerca de esta casa",
+    "amenitiesTitle": "Lo que ofrece este lugar",
+    "laundry": "Lavandería",
+    "petsWelcome": "Se admiten mascotas",
+    "airConditioning": "Aire acondicionado",
+    "hostedBy": "Anfitrión: {name}",
+    "superhost": "Superanfitrión",
+    "hostingSince": "Anfitrión desde {year}",
+    "price": "Precio",
+    "save": "Guardar",
+    "saved": "Guardado",
+    "night": "noche",
+    "sleeps": {
+      "one": "Capacidad: hasta {count} huésped",
+      "other": "Capacidad: hasta {count} huéspedes"
+    },
+    "notFoundTitle": "Este alojamiento no existe",
+    "notFoundBody": "Puede que se haya eliminado o que el enlace sea incorrecto.",
+    "browseAll": "Ver todos los alojamientos"
+  },
+  "error": {
+    "title": "Algo salió mal.",
+    "body": "No pudimos cargar esta página. Inténtalo de nuevo en un momento.",
+    "reference": "Referencia: {digest}",
+    "retryHint": "Inténtalo de nuevo en un momento.",
+    "tryAgain": "Intentar de nuevo"
+  },
+  "backToTop": "Volver arriba",
+  "comingSoon": {
+    "badge": "Próximamente",
+    "backHome": "Volver a los alojamientos",
+    "profile": {
+      "title": "Perfil",
+      "body": "Aquí estarán tus datos, viajes anteriores y preferencias."
+    },
+    "login": {
+      "title": "Iniciar sesión",
+      "body": "Inicia sesión para sincronizar tus favoritos y reservas en todos tus dispositivos."
+    }
+  },
+  "dialog": {
+    "close": "Cerrar"
+  }
+}

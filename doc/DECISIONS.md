@@ -23,3 +23,49 @@ The listing detail shell stays a server component. Future interactive sections c
 `SearchBar` reads `useSearchParams` inside a Suspense boundary so static prerendering can use `SearchBarSkeleton`. The fallback matches the form's layout to avoid a layout shift during hydration.
 
 The listing route shares a React-cached lookup between `generateMetadata` and the page because the GraphQL POST is not covered by Next.js fetch memoization. If the route has already streamed its loading state, a missing listing cannot change the committed HTTP status; Next.js marks the not-found render as noindex.
+
+## Locale resolution
+
+The locale is resolved once, in middleware: a `?lg=<tag>` query parameter wins, then the `lg` cookie, then English. The middleware forwards the result in an `x-locale` request header so server components read one value instead of re-implementing the precedence, and it persists a valid `?lg=` to the cookie so a shared link becomes the visitor's preference.
+
+A path prefix (`/fr/...`) was rejected: it would move every route under `app/[locale]/` for four languages on a UI whose data is English-only. The query parameter keeps language shareable, consistent with search state living in the URL, while the cookie makes it sticky across plain links such as listing cards.
+
+The dialog does not navigate. It calls a server action that sets the cookie, then `router.refresh()`. A search-param navigation would only re-render the page segment; the header lives in the root layout and must re-render too, which refresh guarantees. Focus is returned to the control that opened the dialog explicitly, because the dropdown that may have opened it has unmounted by then.
+
+## Translations without a library
+
+Strings live in one JSON catalog per locale and are read through `t(key, vars)`. The catalog shape is typed from `en.json`, so other catalogs must match it and keys are checked at compile time. Plurals use CLDR categories selected with `Intl.PluralRules`, with `other` as the fallback form. With roughly fifty strings and no date or currency formatting yet, `next-intl` or `react-intl` would add routing opinions and bundle weight for features not in use; if rich formatting arrives, the `t()` call sites do not change.
+
+Only UI chrome is translated. Listing content is stored in English and would need per-language columns to translate. Prices keep a literal `$` prefix rather than `Intl.NumberFormat` currency output, which would turn `$120` into `120,00 $US` in French; that is a product decision deferred until there is more than one currency.
+
+The web fonts have no CJK glyphs. Rather than ship Noto Sans SC (which slows every build through `next/font`), the font stacks name the platform CJK faces after the web fonts, so Latin text keeps the chosen fonts and Chinese falls through per glyph. The brand tagline falls through to Kaiti to keep a handwritten feel.
+
+## Header client islands
+
+`Header` stays a server component. The interactive part — globe button, dropdown menu and language dialog — is one client component, `HeaderActions`, because the globe and the menu's Language item share the dialog's open state. The globe is hidden below the `sm` breakpoint, so Language is also a menu item; otherwise phones would have no way to switch.
+
+The wordmark is rendered only through `components/Logo` so the brand mark cannot drift between pages.
+
+## Routes before features
+
+`/wishlist`, `/profile` and `/login` were created as real routes rendering a shared `ComingSoon` body rather than a single `/coming-soon?feature=` page. The URLs in the menu never change when the feature lands, and each route can grow its own metadata and loading state independently. `/wishlist` has since become real; the other two remain placeholders.
+
+## Anonymous wishlist
+
+Saved listing ids live in `localStorage` under `cozystay.wishlist`, newest first, behind `useSyncExternalStore`. The server snapshot is an empty list, so server HTML shows empty hearts and the client fills them after hydration without a mismatch; `useHydrated` lets the wishlist page show a skeleton instead of a false empty state during that window. The `storage` event keeps tabs in sync. Writes update an in-memory copy first, so a failing `localStorage` (private mode, quota) still works for the current tab.
+
+Saving from the detail page uses the same button in an `inline` variant with visible Save/Saved text. Both variants use `aria-pressed` with a stable label.
+
+`/wishlist` is a server page that mounts a client feed. The feed snapshots the ids on mount and fetches them through `/api/listings?ids=…` in `MAX_LIMIT` chunks, reordering the response to the saved order. Un-saving on the page leaves the card visible with an empty heart so the action can be undone; the list is correct on the next visit. The fetch uses `use()` over a cached promise inside `Suspense` rather than an effect, which keeps loading and error handling declarative; an explicit retry bumps the cache key.
+
+The API accepts the id list as a filter rather than a separate endpoint so the location and guest filters still compose with it. Malformed ids are dropped and an empty list matches nothing, never everything.
+
+## Accounts roadmap
+
+The build order was reconsidered: a profile page is the signed-in user's data and has nothing to show before authentication, while an anonymous wishlist is a complete feature on its own. So: wishlist (done, anonymous), then authentication, then profile.
+
+Authentication will use Supabase Auth through `@supabase/ssr`, kept server-side: credential and OAuth flows run in server actions and a `/auth/callback` route handler, and the session lives in cookies. This preserves the existing rule that Supabase keys stay out of the browser bundle. The `/login` route becomes the sign-in form; the menu's Log in item toggles to Log out when a session exists.
+
+With a session available, the wishlist moves to a `wishlists (user_id, listing_id, created_at)` table protected by row-level security on `auth.uid()`, added as a CLI migration like every schema change. On first sign-in the anonymous `localStorage` list is merged into the table and cleared. `useWishlist` keeps its `{ ids, has, toggle }` shape; only the store behind it changes, so cards and the detail header do not.
+
+Profile follows as the smallest step: display name and avatar from the auth user's metadata, plus a link to the wishlist. It is deliberately thin until bookings exist to show.

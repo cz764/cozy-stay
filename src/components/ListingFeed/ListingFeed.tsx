@@ -6,6 +6,7 @@ import { fetchListings } from "@/app/api";
 import { AUTO_LOAD_PAGES, DEFAULT_LIMIT } from "@/data/constants";
 import { Listing, ListingQuery, ListingsPage } from "@/data/types";
 import { Button } from "@/components/ui/button";
+import { useT } from "@/i18n/client";
 import { ListingGrid } from "../ListingGrid/ListingGrid";
 import ListingGridSkeleton from "../ListingGrid/ListingGridSkeleton";
 
@@ -15,6 +16,7 @@ interface ListingFeedProps {
 }
 
 export default function ListingFeed({ initialPage, query }: ListingFeedProps) {
+  const t = useT();
   const [items, setItems] = useState<Listing[]>(initialPage.listings);
   const [cursor, setCursor] = useState<string | null>(initialPage.endCursor);
   const [hasMore, setHasMore] = useState(initialPage.hasNextPage);
@@ -29,7 +31,7 @@ export default function ListingFeed({ initialPage, query }: ListingFeedProps) {
   // Keep this callback stable: observeSentinel depends on its identity.
   const loadNextPage = useCallback(async () => {
     setIsLoading(true);
-    setAnnouncement("Loading more stays");
+    setAnnouncement(t("feed.loadingMore"));
     try {
       const nextPage = await fetchListings({
         location,
@@ -44,19 +46,18 @@ export default function ListingFeed({ initialPage, query }: ListingFeedProps) {
       const total = items.length + nextPage.listings.length;
       setAnnouncement(
         nextPage.hasNextPage
-          ? `${nextPage.listings.length} more stays loaded, ${total} shown.`
-          : `You've seen all ${total} stays.`,
+          ? t("feed.loaded", { count: nextPage.listings.length, total })
+          : t("feed.seenAll", { count: total }),
       );
     } catch (ex) {
       console.error(ex);
-      const message =
-        ex instanceof Error ? ex.message : "Could not load more stays.";
+      const message = ex instanceof Error ? ex.message : t("feed.loadError");
       setError(message);
       setAnnouncement(message);
     } finally {
       setIsLoading(false);
     }
-  }, [location, guests, cursor, items.length]);
+  }, [location, guests, cursor, items.length, t]);
 
   // React 19 runs ref cleanup on unmount or identity changes; renderFooter controls observation.
   const observeSentinel = useCallback(
@@ -90,7 +91,7 @@ export default function ListingFeed({ initialPage, query }: ListingFeedProps) {
             className="mt-3"
             onClick={() => setError(null)}
           >
-            Try again
+            {t("feed.tryAgain")}
           </Button>
         </div>
       );
@@ -115,7 +116,7 @@ export default function ListingFeed({ initialPage, query }: ListingFeedProps) {
                 void loadNextPage();
               }}
             >
-              Load more stays
+              {t("feed.loadMore")}
             </Button>
           </div>
         );
@@ -127,7 +128,7 @@ export default function ListingFeed({ initialPage, query }: ListingFeedProps) {
 
     return (
       <p className="mt-10 text-center text-sm text-muted-foreground">
-        You&rsquo;ve seen all {items.length} stays.
+        {t("feed.seenAll", { count: items.length })}
       </p>
     );
   };

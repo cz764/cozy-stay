@@ -4,6 +4,7 @@ import { notFound } from "next/navigation";
 
 import { fetchListingById } from "@/app/api/server";
 import ListingDetail from "@/components/ListingDetail/ListingDetail";
+import { getT } from "@/i18n/server";
 
 interface ListingPageProps {
   params: Promise<{ id: string }>;
@@ -19,14 +20,18 @@ export async function generateMetadata({
   params,
 }: ListingPageProps): Promise<Metadata> {
   const { id } = await params;
-  const listing = await getListing(id);
+  const [listing, t] = await Promise.all([getListing(id), getT()]);
   // The page streams behind loading.tsx, so a missing listing can't change
   // the committed 200 status — Next marks the not-found render noindex.
-  if (!listing) return { title: "Stay not found — cozystay" };
+  if (!listing) return { title: t("meta.notFoundTitle") };
 
   return {
-    title: `${listing.title} — cozystay`,
-    description: `${listing.title} in ${listing.location}, from $${listing.pricePerNight} a night.`,
+    title: t("meta.pageTitle", { page: listing.title }),
+    description: t("meta.listingDescription", {
+      title: listing.title,
+      location: listing.location,
+      price: listing.pricePerNight,
+    }),
   };
 }
 
