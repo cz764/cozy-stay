@@ -4,9 +4,11 @@ import { useEffect, useState } from "react";
 import { ArrowUp } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
+import { useT } from "@/i18n/client";
 import { cn } from "@/utils";
 
 export default function BackToTop() {
+  const t = useT();
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
@@ -27,7 +29,7 @@ export default function BackToTop() {
     <Button
       variant="secondary"
       size="icon-lg"
-      aria-label="Return to top"
+      aria-label={t("backToTop")}
       // Stay mounted for the fade; inert removes hidden controls from focus and assistive tech.
       inert={!visible}
       onClick={scrollToTop}

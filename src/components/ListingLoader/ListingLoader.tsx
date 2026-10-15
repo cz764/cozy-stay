@@ -1,4 +1,5 @@
 import { fetchListings } from "@/app/api/server";
+import { getT } from "@/i18n/server";
 import { DEFAULT_LIMIT } from "@/data/constants";
 import { ListingQuery, ListingsPage } from "@/data/types";
 import FeaturedStaysHeader from "../FeaturedStaysHeader/FeaturedStaysHeader";
@@ -19,8 +20,8 @@ export default async function ListingLoader({
     firstPage = await fetchListings({ ...searchParams, first: DEFAULT_LIMIT });
   } catch (ex) {
     console.error(ex);
-    const message =
-      ex instanceof Error ? ex.message : "Something went wrong loading stays.";
+    const t = await getT();
+    const message = ex instanceof Error ? ex.message : t("feed.loadFailed");
     return <ErrorDisplay error={message} />;
   }
 

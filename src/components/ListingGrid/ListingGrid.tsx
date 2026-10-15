@@ -1,4 +1,7 @@
+"use client";
+
 import { Listing } from "@/data/types";
+import { useT } from "@/i18n/client";
 import { ListingCard } from "@/components/ListingCard/ListingCard";
 
 interface ListingGridProps {
@@ -12,14 +15,14 @@ const gridClassName =
 const PRIORITY_CARD_COUNT = 6;
 
 export function ListingGrid({ listings }: ListingGridProps) {
+  const t = useT();
+
   if (listings.length === 0) {
     return (
       <div className="rounded-2xl border border-dashed py-16 text-center">
-        <p className="font-medium text-foreground">
-          No stays match your search
-        </p>
+        <p className="font-medium text-foreground">{t("feed.emptyTitle")}</p>
         <p className="mt-1 text-sm text-muted-foreground">
-          Try a different destination or fewer guests.
+          {t("feed.emptyBody")}
         </p>
       </div>
     );
