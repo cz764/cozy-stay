@@ -9,7 +9,7 @@ export function Header() {
           href="/"
           className="font-brand text-2xl font-bold tracking-tight text-primary"
         >
-          cozy<span className="text-foreground">stays</span>
+          cozy<span className="text-foreground">stay</span>
         </Link>
 
         <nav className="absolute left-1/2 hidden -translate-x-1/2 items-center gap-8 text-lg font-medium md:flex">

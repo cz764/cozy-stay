@@ -22,10 +22,10 @@ export async function generateMetadata({
   const listing = await getListing(id);
   // The page streams behind loading.tsx, so a missing listing can't change
   // the committed 200 status — Next marks the not-found render noindex.
-  if (!listing) return { title: "Stay not found — cozystays" };
+  if (!listing) return { title: "Stay not found — cozystay" };
 
   return {
-    title: `${listing.title} — cozystays`,
+    title: `${listing.title} — cozystay`,
     description: `${listing.title} in ${listing.location}, from $${listing.pricePerNight} a night.`,
   };
 }

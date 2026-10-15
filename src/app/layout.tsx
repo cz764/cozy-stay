@@ -29,7 +29,7 @@ const playwrite = Playwrite_US_Modern({
 });
 
 export const metadata: Metadata = {
-  title: "cozystays — Escape and relax",
+  title: "cozystay — Escape and relax",
   description:
     "Find your next cozy home to escape from chaos of life and relax to recharge for next destinations.",
 };
