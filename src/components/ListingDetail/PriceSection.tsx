@@ -3,7 +3,6 @@ interface PriceSectionProps {
   maxGuests: number;
 }
 
-/** The price card — sticky beside the description on desktop. */
 export function PriceSection({ pricePerNight, maxGuests }: PriceSectionProps) {
   return (
     <aside

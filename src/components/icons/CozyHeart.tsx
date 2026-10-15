@@ -2,7 +2,11 @@ import type { SVGProps } from "react";
 
 import { cn } from "@/utils";
 
-export function CozyHeart({ className, ...props }: SVGProps<SVGSVGElement>) {
+interface CozyHeartProps extends SVGProps<SVGSVGElement> {
+  className?: string;
+}
+
+export function CozyHeart({ className, ...props }: CozyHeartProps) {
   return (
     <svg
       viewBox="0 0 32 32"

@@ -17,7 +17,7 @@ export function SearchBar() {
   const [location, setLocation] = useState(searchParams.get("location") ?? "");
   const [guests, setGuests] = useState(searchParams.get("guests") ?? "");
 
-  function handleSubmit(e: React.SubmitEvent) {
+  const handleSubmit = (e: React.SubmitEvent) => {
     e.preventDefault();
 
     const params = new URLSearchParams();
@@ -26,7 +26,7 @@ export function SearchBar() {
 
     const query = params.toString();
     router.push(query ? `/?${query}` : "/");
-  }
+  };
 
   return (
     <form

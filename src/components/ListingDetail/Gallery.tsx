@@ -6,9 +6,7 @@ interface GalleryProps {
   listing: ListingDetail;
 }
 
-/** Cover shot plus up to four tiles; the tiles collapse away on mobile. */
 export function Gallery({ listing }: GalleryProps) {
-  // The gallery includes the cover; fall back to it if the gallery is empty.
   const images = listing.images.length > 0 ? listing.images : [listing.image];
   const [cover, ...rest] = images;
   const tiles = rest.slice(0, 4);

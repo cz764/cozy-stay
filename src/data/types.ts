@@ -7,7 +7,6 @@ export interface Listing {
   rating: number;
   reviewCount: number;
   maxGuests: number;
-  /** Filter facets — wired into the filter sidebar in a later step. */
   amenities: {
     laundry: boolean;
     petsFriendly: boolean;
@@ -15,12 +14,9 @@ export interface Listing {
   };
 }
 
-/**
- * Everything the detail page shows on top of the card projection. `image`
- * (inherited) is the cover shot; `images` is the full gallery including it.
- */
 export interface ListingDetail extends Listing {
   description: string;
+  // Includes the cover image.
   images: string[];
   host: {
     name: string;
@@ -35,21 +31,11 @@ export interface ListingQuery {
   guests?: string;
 }
 
-/**
- * One slice of search results, shaped like a Relay-style connection page.
- *
- * Cursor-based (`after`/`first`) rather than offset-based: an insert into the
- * catalog shifts every later offset and duplicates items across requests,
- * while a cursor pins the next page to the last row already seen.
- */
 export interface ListingsPage {
   listings: Listing[];
-  /** Matches across every page for this query, not just the returned slice. */
+  // All matches for the query, including pages not yet loaded.
   totalCount: number;
-  /**
-   * Cursor of the last row in `listings` — pass as `after` to fetch the next
-   * page. Null when the page is empty.
-   */
+  // Pass the last row's cursor as after; null for an empty page.
   endCursor: string | null;
   hasNextPage: boolean;
 }

@@ -34,11 +34,11 @@ export const metadata: Metadata = {
     "Find your next cozy home to escape from chaos of life and relax to recharge for next destinations.",
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+interface RootLayoutProps {
+  readonly children: React.ReactNode;
+}
+
+export default function RootLayout({ children }: RootLayoutProps) {
   return (
     <html lang="en">
       <body

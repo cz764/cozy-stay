@@ -6,17 +6,10 @@ import { ArrowUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/utils";
 
-/**
- * Floating "return to top" button. Hidden until the page is scrolled past one
- * viewport height — before that, the top is already at hand and the button
- * would only cover cards.
- */
 export default function BackToTop() {
   const [visible, setVisible] = useState(false);
 
   useEffect(() => {
-    // React bails out of no-op setState, so the unthrottled listener only
-    // re-renders on the two threshold crossings, not on every scroll event.
     const onScroll = () => setVisible(window.scrollY > window.innerHeight);
     onScroll();
     window.addEventListener("scroll", onScroll, { passive: true });
@@ -35,15 +28,10 @@ export default function BackToTop() {
       variant="secondary"
       size="icon-lg"
       aria-label="Return to top"
-      // Kept mounted so the opacity transition runs both ways; `inert` hides
-      // the invisible button from clicks, focus, and assistive tech in one go
-      // (and unlike aria-hidden, it may legally land on a focused element —
-      // the case where the button itself was clicked to reach the top).
+      // Stay mounted for the fade; inert removes hidden controls from focus and assistive tech.
       inert={!visible}
       onClick={scrollToTop}
       className={cn(
-        // hover:bg-border replaces the variant's translucent hover with a
-        // darker step of the same stone hue.
         "fixed right-6 bottom-6 z-50 rounded-full border shadow-lg transition-[opacity,background-color] duration-300 hover:bg-border",
         visible ? "opacity-100" : "opacity-0",
       )}

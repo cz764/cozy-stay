@@ -7,7 +7,6 @@ interface ListingHeaderProps {
   reviewCount: number;
 }
 
-/** Title plus the rating · reviews · location subline. */
 export function ListingHeader({
   title,
   location,

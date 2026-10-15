@@ -10,15 +10,6 @@ interface ListingDetailProps {
   listing: ListingDetailData;
 }
 
-/**
- * Layout shell for the detail page: header, gallery, then description and
- * price side by side. Purely presentational — data loading stays in the page.
- *
- * Deliberately not `"use client"`: nothing here holds state or handles events,
- * so it renders entirely on the server and ships no component JS. The first
- * interactive piece (a gallery lightbox, a reserve flow) should become its own
- * client component rather than converting this shell.
- */
 export default function ListingDetail({ listing }: ListingDetailProps) {
   return (
     <div className="mx-auto max-w-5xl">

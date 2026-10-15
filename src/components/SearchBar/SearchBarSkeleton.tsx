@@ -6,19 +6,7 @@ import {
   SearchDivider,
 } from "@/components/SearchField/SearchField";
 
-/**
- * Static stand-in for `SearchBar` while it defers to the client.
- *
- * `SearchBar` calls `useSearchParams()`, which can't be resolved during static
- * prerendering — without a Suspense boundary that bailout propagates to the
- * whole route and breaks the build of the statically generated `/_not-found`
- * page. This is the fallback for that boundary.
- *
- * It deliberately reuses `SearchField`, `SearchDivider` and `Button` and
- * repeats the same form classes, so it occupies identical space and swaps in
- * without layout shift. With no query params the inputs are empty either way,
- * so the swap is invisible; with `?location=…` the fields fill in on hydration.
- */
+// useSearchParams in SearchBar requires a Suspense fallback during prerendering.
 export function SearchBarSkeleton() {
   return (
     <div

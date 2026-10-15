@@ -8,7 +8,6 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-/** Maps a `ListingCardFields` node onto the UI's `Listing` shape. */
 export function toListing(node: ListingCardFieldsFragment): Listing {
   return {
     // BigInt and numeric arrive as strings over GraphQL; the UI type keeps

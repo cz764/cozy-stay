@@ -1,11 +1,5 @@
 import type { TypedDocumentString } from "@/gql/graphql";
 
-/**
- * Minimal GraphQL-over-fetch executor for the Supabase pg_graphql endpoint.
- * Server-only, like everything that touches the backend directly — the env
- * vars are deliberately not NEXT_PUBLIC so this can't leak into the client
- * bundle by accident.
- */
 export async function executeGraphQL<TResult, TVariables>(
   query: TypedDocumentString<TResult, TVariables>,
   variables: TVariables,

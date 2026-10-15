@@ -4,19 +4,12 @@ import { useEffect } from "react";
 
 import { Button } from "@/components/ui/button";
 
-/**
- * Route-level boundary for throws that escape a component's own handling —
- * `ListingLoader` catches its own fetch failures and renders `ErrorDisplay`,
- * so reaching this means something genuinely unexpected. Replaces the bare
- * Next.js default screen in production, where `error.message` is redacted.
- */
-export default function Error({
-  error,
-  reset,
-}: {
+interface ErrorProps {
   error: Error & { digest?: string };
   reset: () => void;
-}) {
+}
+
+export default function Error({ error, reset }: ErrorProps) {
   useEffect(() => {
     console.error(error);
   }, [error]);

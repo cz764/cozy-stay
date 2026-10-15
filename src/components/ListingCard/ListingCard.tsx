@@ -8,16 +8,10 @@ import { Listing } from "@/data/types";
 
 interface ListingCardProps {
   listing: Listing;
-  /** Above-the-fold cards preload their image instead of lazy-loading it. */
   priority?: boolean;
 }
 
-/**
- * Memoized so appending a page doesn't re-render the cards already on screen.
- * `ListingFeed` appends with `[...previous, ...next]`, which preserves each
- * existing listing's object identity, so the shallow prop compare hits.
- */
-export const ListingCard = memo(function ListingCard({
+function ListingCard({
   listing,
   priority = false,
 }: ListingCardProps) {
@@ -66,4 +60,9 @@ export const ListingCard = memo(function ListingCard({
       </button>
     </article>
   );
-});
+}
+
+// Memoization relies on the feed preserving existing listing object identities.
+const MemoizedListingCard = memo(ListingCard);
+
+export { MemoizedListingCard as ListingCard };

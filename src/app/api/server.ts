@@ -6,11 +6,6 @@ import { toListing } from "@/utils";
 import { executeGraphQL } from "./graphql";
 import type { FetchListingsParams } from ".";
 
-/**
- * The card projection — everything the feed renders and nothing the detail
- * page adds. The detail query will spread this same fragment so card and
- * detail can never disagree on shared fields.
- */
 export const ListingCardFields = graphql(`
   fragment ListingCardFields on Listings {
     id
@@ -84,19 +79,7 @@ const ListingFeedQuery = graphql(`
   }
 `);
 
-/**
- * The backend client — the only place search and pagination are implemented,
- * now backed by Supabase pg_graphql. Server-side callers (`ListingLoader`, and
- * `GET /api/listings` on behalf of the client feed) both come through here.
- *
- * Server-only on purpose: keeps the Supabase credentials and the GraphQL
- * documents out of the browser bundle, and keeps the infinite scroll a real
- * network round trip through our own route handler.
- *
- * Defaults and bounds live here rather than at the HTTP edge: they're the
- * backend's policy. The upper bound stops a hand-crafted `?first=99999` asking
- * for the world (pg_graphql independently enforces max_rows = MAX_LIMIT).
- */
+// Enforce page-size bounds here so direct server callers and HTTP callers share them.
 export async function fetchListings({
   location,
   guests,
@@ -147,11 +130,7 @@ export async function fetchListings({
   };
 }
 
-/**
- * Fetches one listing with the detail-page extras. Returns null when nothing
- * matches — including syntactically invalid ids from hand-typed URLs, which
- * are rejected here rather than sent to pg_graphql to fail a BigInt parse.
- */
+// Reject malformed IDs before pg_graphql attempts to parse them as BigInt.
 export async function fetchListingById(
   id: string,
 ): Promise<ListingDetail | null> {

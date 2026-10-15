@@ -26,15 +26,11 @@ export default async function ListingLoader({
 
   return (
     <>
-      {/* `totalCount` counts every match, not just this page — using the page
-          length here would under-report once results exceed the limit. */}
       <FeaturedStaysHeader
         location={location}
         guests={guests}
         total={firstPage.totalCount}
       />
-      {/* Server-rendered first page is handed to the client feed, which owns
-          every page appended after it. */}
       <ListingFeed initialPage={firstPage} query={{ location, guests }} />
     </>
   );

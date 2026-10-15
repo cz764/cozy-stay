@@ -2,7 +2,7 @@
 
 ## Components style
 
-- Use function instead of const.
+- Use function to define components instead of const. When defining variable and handler functions inside component, use const.
 - Use `interface xxxProps` to define component props.
 - Ask for approvals when adding effects.
 - Ask for approvals when making UX decisions.
