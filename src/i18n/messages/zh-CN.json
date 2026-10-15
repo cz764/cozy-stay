@@ -60,6 +60,19 @@
     "pricePerNight": "${price}/晚",
     "save": "将{title}加入心愿单"
   },
+  "wishlist": {
+    "title": "心愿单",
+    "count": {
+      "one": "已收藏 {count} 个房源",
+      "other": "已收藏 {count} 个房源"
+    },
+    "deviceNote": "仅保存在此设备上。登录后可在所有设备同步心愿单（即将推出）。",
+    "emptyTitle": "还没有收藏的房源",
+    "emptyBody": "点击任意房源上的爱心即可收藏到这里。",
+    "browse": "浏览房源",
+    "loadError": "无法加载你的心愿单。",
+    "tryAgain": "重试"
+  },
   "listing": {
     "reviews": {
       "one": "{count} 条评价",
@@ -75,6 +88,8 @@
     "superhost": "超赞房东",
     "hostingSince": "{year} 年起接待房客",
     "price": "价格",
+    "save": "收藏",
+    "saved": "已收藏",
     "night": "/晚",
     "sleeps": {
       "one": "最多可住 {count} 位房客",
@@ -95,10 +110,6 @@
   "comingSoon": {
     "badge": "即将推出",
     "backHome": "返回房源列表",
-    "wishlist": {
-      "title": "心愿单",
-      "body": "收藏你喜欢的房源，稍后在这里找到它们。"
-    },
     "profile": {
       "title": "个人资料",
       "body": "你的资料、历史行程和偏好设置将显示在这里。"

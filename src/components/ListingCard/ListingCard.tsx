@@ -3,7 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { Star } from "lucide-react";
 
-import { CozyHeart } from "@/components/icons/CozyHeart";
+import { WishlistButton } from "@/components/WishlistButton/WishlistButton";
 import { Listing } from "@/data/types";
 import { useT } from "@/i18n/client";
 
@@ -12,10 +12,7 @@ interface ListingCardProps {
   priority?: boolean;
 }
 
-function ListingCard({
-  listing,
-  priority = false,
-}: ListingCardProps) {
+function ListingCard({ listing, priority = false }: ListingCardProps) {
   const t = useT();
   const { id, title, location, image, pricePerNight, rating } = listing;
 
@@ -54,12 +51,11 @@ function ListingCard({
         </p>
       </Link>
 
-      <button
-        aria-label={t("card.save", { title })}
-        className="absolute right-2 top-2 rounded-full p-2 text-white/90 outline-none transition-transform duration-200 hover:scale-108 focus-visible:ring-[3px] focus-visible:ring-ring/50"
-      >
-        <CozyHeart className="size-6 fill-black/50 stroke-white [stroke-width:2px]" />
-      </button>
+      <WishlistButton
+        id={id}
+        title={title}
+        className="absolute right-2 top-2"
+      />
     </article>
   );
 }

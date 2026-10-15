@@ -60,6 +60,19 @@
     "pricePerNight": "{price} $ la nuit",
     "save": "Enregistrer {title} dans les favoris"
   },
+  "wishlist": {
+    "title": "Favoris",
+    "count": {
+      "one": "{count} logement enregistré",
+      "other": "{count} logements enregistrés"
+    },
+    "deviceNote": "Enregistrés sur cet appareil. Connectez-vous pour retrouver vos favoris partout (bientôt disponible).",
+    "emptyTitle": "Aucun logement enregistré pour l’instant",
+    "emptyBody": "Touchez le cœur d’un logement pour le garder ici.",
+    "browse": "Parcourir les logements",
+    "loadError": "Impossible de charger vos favoris.",
+    "tryAgain": "Réessayer"
+  },
   "listing": {
     "reviews": {
       "one": "{count} avis",
@@ -75,6 +88,8 @@
     "superhost": "Superhôte",
     "hostingSince": "Hôte depuis {year}",
     "price": "Prix",
+    "save": "Enregistrer",
+    "saved": "Enregistré",
     "night": "la nuit",
     "sleeps": {
       "one": "Jusqu’à {count} voyageur",
@@ -95,10 +110,6 @@
   "comingSoon": {
     "badge": "Bientôt disponible",
     "backHome": "Retour aux logements",
-    "wishlist": {
-      "title": "Favoris",
-      "body": "Enregistrez les logements que vous aimez et retrouvez-les ici."
-    },
     "profile": {
       "title": "Profil",
       "body": "Vos informations, vos voyages passés et vos préférences seront ici."

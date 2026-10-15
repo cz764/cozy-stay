@@ -60,6 +60,19 @@
     "pricePerNight": "${price} night",
     "save": "Save {title} to wishlist"
   },
+  "wishlist": {
+    "title": "Wishlist",
+    "count": {
+      "one": "{count} saved stay",
+      "other": "{count} saved stays"
+    },
+    "deviceNote": "Saved on this device. Log in to keep your wishlist across devices — coming soon.",
+    "emptyTitle": "No saved stays yet",
+    "emptyBody": "Tap the heart on any stay to keep it here.",
+    "browse": "Browse stays",
+    "loadError": "Could not load your wishlist.",
+    "tryAgain": "Try again"
+  },
   "listing": {
     "reviews": {
       "one": "{count} review",
@@ -75,6 +88,8 @@
     "superhost": "Superhost",
     "hostingSince": "Hosting since {year}",
     "price": "Price",
+    "save": "Save",
+    "saved": "Saved",
     "night": "night",
     "sleeps": {
       "one": "Sleeps up to {count} guest",
@@ -95,10 +110,6 @@
   "comingSoon": {
     "badge": "Coming soon",
     "backHome": "Back to stays",
-    "wishlist": {
-      "title": "Wishlist",
-      "body": "Save the stays you love and find them again here."
-    },
     "profile": {
       "title": "Profile",
       "body": "Your details, past trips, and preferences will live here."

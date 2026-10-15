@@ -14,6 +14,7 @@ export default function ListingDetail({ listing }: ListingDetailProps) {
   return (
     <div className="mx-auto max-w-5xl">
       <ListingHeader
+        id={listing.id}
         title={listing.title}
         location={listing.location}
         rating={listing.rating}

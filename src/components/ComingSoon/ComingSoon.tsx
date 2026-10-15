@@ -1,13 +1,12 @@
 import Link from "next/link";
-import { Heart, LogIn, UserRound, type LucideIcon } from "lucide-react";
+import { LogIn, UserRound, type LucideIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { getT } from "@/i18n/server";
 
-export type ComingSoonFeature = "wishlist" | "profile" | "login";
+export type ComingSoonFeature = "profile" | "login";
 
 const icons: Record<ComingSoonFeature, LucideIcon> = {
-  wishlist: Heart,
   profile: UserRound,
   login: LogIn,
 };
