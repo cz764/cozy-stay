@@ -22,7 +22,7 @@ export async function generateMetadata({
   const { id } = await params;
   const [listing, t] = await Promise.all([getListing(id), getT()]);
   // The page streams behind loading.tsx, so a missing listing can't change
-  // the committed 200 status — Next marks the not-found render noindex.
+  // the committed 200 status – Next marks the not-found render noindex.
   if (!listing) return { title: t("meta.notFoundTitle") };
 
   return {

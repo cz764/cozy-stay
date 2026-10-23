@@ -1,10 +1,10 @@
 {
   "meta": {
-    "title": "cozystay — Évadez-vous et détendez-vous",
+    "title": "cozystay – Évadez-vous et détendez-vous",
     "description": "Trouvez votre prochain logement douillet pour échapper au chaos du quotidien et recharger vos batteries avant la prochaine destination.",
-    "pageTitle": "{page} — cozystay",
+    "pageTitle": "{page} – cozystay",
     "listingDescription": "{title} à {location}, à partir de {price} $ la nuit.",
-    "notFoundTitle": "Logement introuvable — cozystay"
+    "notFoundTitle": "Logement introuvable – cozystay"
   },
   "header": {
     "stays": "Logements",
@@ -78,7 +78,7 @@
       "one": "{count} avis",
       "other": "{count} avis"
     },
-    "photoAlt": "{title} à {location} — photo {number}",
+    "photoAlt": "{title} à {location} – photo {number}",
     "about": "À propos de ce logement",
     "amenitiesTitle": "Ce que propose ce logement",
     "laundry": "Lave-linge",

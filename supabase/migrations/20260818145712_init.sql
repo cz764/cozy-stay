@@ -1,4 +1,4 @@
--- Schema for cozy-stays — see BackendDesign.md.
+-- Schema for cozy-stay – see BackendDesign.md.
 -- Run in the Supabase SQL Editor (or via `supabase db push` once the CLI is linked).
 
 -- pg_graphql serves the GraphQL API; pg_trgm accelerates the ilike search.
@@ -58,7 +58,7 @@ create table public.bookings (
   check (end_date >= start_date)
 );
 
--- Feed search is `location/title ilike '%needle%'` — trigram indexes make that
+-- Feed search is `location/title ilike '%needle%'` – trigram indexes make that
 -- an index scan instead of a full-table scan.
 create index listings_location_trgm on public.listings using gin (location gin_trgm_ops);
 create index listings_title_trgm on public.listings using gin (title gin_trgm_ops);

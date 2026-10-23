@@ -9,7 +9,7 @@ import {
   isLocale,
 } from "@/i18n/config";
 
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const requested = request.nextUrl.searchParams.get(LOCALE_PARAM);
   const stored = request.cookies.get(LOCALE_COOKIE)?.value;
 

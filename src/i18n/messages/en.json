@@ -1,10 +1,10 @@
 {
   "meta": {
-    "title": "cozystay — Escape and relax",
+    "title": "cozystay – Escape and relax",
     "description": "Find your next cozy home to escape from chaos of life and relax to recharge for next destinations.",
-    "pageTitle": "{page} — cozystay",
+    "pageTitle": "{page} – cozystay",
     "listingDescription": "{title} in {location}, from ${price} a night.",
-    "notFoundTitle": "Stay not found — cozystay"
+    "notFoundTitle": "Stay not found – cozystay"
   },
   "header": {
     "stays": "Stays",
@@ -66,7 +66,7 @@
       "one": "{count} saved stay",
       "other": "{count} saved stays"
     },
-    "deviceNote": "Saved on this device. Log in to keep your wishlist across devices — coming soon.",
+    "deviceNote": "Saved on this device. Log in to keep your wishlist across devices – coming soon.",
     "emptyTitle": "No saved stays yet",
     "emptyBody": "Tap the heart on any stay to keep it here.",
     "browse": "Browse stays",
@@ -78,7 +78,7 @@
       "one": "{count} review",
       "other": "{count} reviews"
     },
-    "photoAlt": "{title} in {location} — photo {number}",
+    "photoAlt": "{title} in {location} – photo {number}",
     "about": "About this home",
     "amenitiesTitle": "What this place offers",
     "laundry": "Laundry",

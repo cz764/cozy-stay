@@ -26,7 +26,7 @@ The listing route shares a React-cached lookup between `generateMetadata` and th
 
 ## Locale resolution
 
-The locale is resolved once, in middleware: a `?lg=<tag>` query parameter wins, then the `lg` cookie, then English. The middleware forwards the result in an `x-locale` request header so server components read one value instead of re-implementing the precedence, and it persists a valid `?lg=` to the cookie so a shared link becomes the visitor's preference.
+The locale is resolved once, in the proxy (`src/proxy.ts`, Next.js 16's name for middleware): a `?lg=<tag>` query parameter wins, then the `lg` cookie, then English. The proxy forwards the result in an `x-locale` request header so server components read one value instead of re-implementing the precedence, and it persists a valid `?lg=` to the cookie so a shared link becomes the visitor's preference.
 
 A path prefix (`/fr/...`) was rejected: it would move every route under `app/[locale]/` for four languages on a UI whose data is English-only. The query parameter keeps language shareable, consistent with search state living in the URL, while the cookie makes it sticky across plain links such as listing cards.
 
@@ -42,7 +42,7 @@ The web fonts have no CJK glyphs. Rather than ship Noto Sans SC (which slows eve
 
 ## Header client islands
 
-`Header` stays a server component. The interactive part — globe button, dropdown menu and language dialog — is one client component, `HeaderActions`, because the globe and the menu's Language item share the dialog's open state. The globe is hidden below the `sm` breakpoint, so Language is also a menu item; otherwise phones would have no way to switch.
+`Header` stays a server component. The interactive part – globe button, dropdown menu and language dialog – is one client component, `HeaderActions`, because the globe and the menu's Language item share the dialog's open state. The globe is hidden below the `sm` breakpoint, so Language is also a menu item; otherwise phones would have no way to switch.
 
 The wordmark is rendered only through `components/Logo` so the brand mark cannot drift between pages.
 

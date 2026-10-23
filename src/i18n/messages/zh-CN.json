@@ -1,10 +1,10 @@
 {
   "meta": {
-    "title": "cozystay — 逃离喧嚣，放松身心",
+    "title": "cozystay – 逃离喧嚣，放松身心",
     "description": "找到你的下一个温馨居所，逃离生活的纷扰，放松充电，再出发。",
-    "pageTitle": "{page} — cozystay",
+    "pageTitle": "{page} – cozystay",
     "listingDescription": "位于{location}的{title}，每晚 ${price} 起。",
-    "notFoundTitle": "找不到房源 — cozystay"
+    "notFoundTitle": "找不到房源 – cozystay"
   },
   "header": {
     "stays": "房源",
@@ -78,7 +78,7 @@
       "one": "{count} 条评价",
       "other": "{count} 条评价"
     },
-    "photoAlt": "位于{location}的{title} — 照片 {number}",
+    "photoAlt": "位于{location}的{title} – 照片 {number}",
     "about": "关于此房源",
     "amenitiesTitle": "房源设施",
     "laundry": "洗衣设备",

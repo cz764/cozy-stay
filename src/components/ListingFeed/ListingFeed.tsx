@@ -137,7 +137,7 @@ export default function ListingFeed({ initialPage, query }: ListingFeedProps) {
     <>
       <ListingGrid listings={items} />
 
-      {/* Stays mounted in every state — a live region only announces changes
+      {/* Stays mounted in every state – a live region only announces changes
           that happen while it is already in the DOM. */}
       <div aria-live="polite" className="sr-only">
         {announcement}
