@@ -26,7 +26,7 @@ const values = listings
 
 const sql = `-- Seed data for cozy-stay – generated from scripts/seed-listings.ts, do not edit the
 -- base VALUES block by hand. Re-runnable: truncates and repopulates everything.
--- Run AFTER supabase/migrations/20260818145712_init.sql, in the Supabase SQL Editor.
+-- Run AFTER every migration in supabase/migrations/, in the Supabase SQL Editor.
 
 begin;
 
@@ -152,13 +152,43 @@ select
 from public.listings l
 cross join lateral generate_series(1, (2 + l.id % 4)::int) as b;
 
+-- 6) Test account: test@test.com / "i love cozystay 123". Written straight
+--    into the auth schema so the seed stays one SQL file; the profiles trigger
+--    adds the matching public.profiles row. Deleting first keeps this
+--    re-runnable (identities and the profile cascade).
+delete from auth.users where email = 'test@test.com';
+
+insert into auth.users
+  (instance_id, id, aud, role, email, encrypted_password, email_confirmed_at,
+   raw_app_meta_data, raw_user_meta_data, created_at, updated_at,
+   confirmation_token, recovery_token, email_change_token_new, email_change)
+values
+  ('00000000-0000-0000-0000-000000000000',
+   '00000000-0000-4000-8000-000000000001',
+   'authenticated', 'authenticated', 'test@test.com',
+   extensions.crypt('i love cozystay 123', extensions.gen_salt('bf', 10)),
+   now(), '{"provider":"email","providers":["email"]}', '{}', now(), now(),
+   '', '', '', '');
+
+insert into auth.identities
+  (id, user_id, provider_id, provider, identity_data,
+   last_sign_in_at, created_at, updated_at)
+values
+  (gen_random_uuid(),
+   '00000000-0000-4000-8000-000000000001',
+   '00000000-0000-4000-8000-000000000001',
+   'email',
+   '{"sub":"00000000-0000-4000-8000-000000000001","email":"test@test.com","email_verified":true}',
+   now(), now(), now());
+
 commit;
 
 select
   (select count(*) from public.listings)       as listings,
   (select count(*) from public.listing_images) as images,
   (select count(*) from public.reviews)        as reviews,
-  (select count(*) from public.bookings)       as bookings;
+  (select count(*) from public.bookings)       as bookings,
+  (select count(*) from public.profiles)       as profiles;
 `;
 
 fs.mkdirSync(`${REPO}/supabase`, { recursive: true });

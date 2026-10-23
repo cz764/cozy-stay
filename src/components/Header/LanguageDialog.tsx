@@ -72,7 +72,7 @@ export function LanguageDialog({
                   disabled={isPending}
                   onClick={() => choose(locale)}
                   className={cn(
-                    "flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left text-sm font-medium outline-none transition-colors hover:bg-accent focus-visible:ring-[3px] focus-visible:ring-ring/50 disabled:opacity-60",
+                    "flex w-full items-center justify-between rounded-xl border px-4 py-3 text-left text-sm font-medium outline-none transition-colors hover:bg-accent focus-ring disabled:opacity-60",
                     selected && "border-foreground",
                   )}
                 >

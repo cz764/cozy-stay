@@ -16,7 +16,11 @@ npm run dev      # http://localhost:3000
 
 Needs a `.env.local` with `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY`
 (deliberately not `NEXT_PUBLIC_` – the backend is only reached from the
-server). The schema and seed live in `supabase/`; after editing any GraphQL
+server). The schema and seed live in `supabase/`: apply migrations with
+`supabase db push --linked`, then run `supabase/seed.sql` in the SQL Editor.
+The seed includes a test account, **test@test.com** / **i love cozystay 123**.
+In the Supabase dashboard, turn off _Confirm email_ under Authentication so
+accounts work without a verification step. After editing any GraphQL
 document in `src/app/api/`, run `npm run codegen` to regenerate the types in
 `src/gql/`.
 
@@ -160,11 +164,15 @@ src/
       listings/route.ts             GET /api/listings – HTTP edge over server.ts
     wishlist/page.tsx               Saved stays (client-fetched from localStorage ids)
     profile/page.tsx                Coming soon
-    login/page.tsx                  Coming soon
+    login/page.tsx                  Email + password form, redirects to ?next= after login
     layout.tsx                      Root layout + fonts, locale provider, header, search bar
     globals.css                     Tailwind v4 + shadcn theme tokens (warm coral palette)
     error.tsx                       Route error boundary
-  proxy.ts                          Resolves the locale from ?lg= / cookie, sets the header
+  proxy.ts                          Resolves the locale from ?lg= / cookie, refreshes the auth session
+  auth/
+    server.ts                       Per-request Supabase client, getUser()
+    actions.ts                      login / logout server actions
+    redirect.ts                     ?next= validation (same-origin paths only)
   i18n/
     config.ts                       Locale list, cookie/param names
     translate.ts                    createT() + MessageKey type derived from en.json
@@ -186,6 +194,7 @@ src/
       SearchBarSkeleton.tsx         Static replica used as the Suspense fallback
     SearchField/SearchField.tsx     Presentational field/divider used by SearchBar
     ListingLoader/
+      LoginForm/LoginForm.tsx         Client form: useActionState over the login action
       ListingLoader.tsx             Async server component – fetches page 1, hands it to the feed
       ListingLoaderSkeleton.tsx     Suspense fallback (header + grid skeletons)
     FeaturedStaysHeader/
@@ -226,22 +235,24 @@ scripts/                            Seed data + generator
 
 ### Accounts: authentication, then profile
 
-The header menu already links to `/login` and `/profile`, which render
-`ComingSoon`. The order is auth first because a profile is "the signed-in
+The header menu links to `/login` (live) and `/profile` (renders
+`ComingSoon`). The order is auth first because a profile is "the signed-in
 user's data" and has nothing to show before it. Decisions taken so far, in
 `doc/DECISIONS.md` under _Accounts roadmap_:
 
-- **Supabase Auth through `@supabase/ssr`**, server-side only: email/password
-  and OAuth flows run in server actions and a `/auth/callback` route handler,
-  with the session in cookies. This keeps the existing rule that Supabase
-  credentials never reach the browser bundle.
+- **Supabase Auth through `@supabase/ssr`**, server-side only. Email and
+  password login is live: `/login` posts to a server action, the session
+  lives in cookies, `src/proxy.ts` refreshes it, and `?next=` returns the
+  visitor to the page they came from. Registration is next; OAuth later adds
+  a `/auth/callback` route handler. Supabase credentials never reach the
+  browser bundle.
 - **Wishlist moves to a `wishlists` table** keyed by `auth.uid()` with row-level
   security, added as a CLI migration. On first login the anonymous
   `localStorage` list is merged in, then cleared. `useWishlist` keeps its
   shape; only the store behind it changes.
 - **Profile** then becomes display name, avatar and a link to the wishlist,
   read from `auth.users` metadata – small by design.
-- The menu's **Log in** item becomes **Log out** when a session exists.
+- The menu's **Log in** item becomes **Log out** when a session exists (done).
 
 - A filter sidebar – **ratings, location, laundry, pets-friendly, AC** – that
   writes to the same query string (e.g. `?minRating=4.8&laundry=true&pets=true`),

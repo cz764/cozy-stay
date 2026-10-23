@@ -14,7 +14,8 @@
     "menu": "Abrir menú",
     "wishlist": "Favoritos",
     "profile": "Perfil",
-    "login": "Iniciar sesión"
+    "login": "Iniciar sesión",
+    "logout": "Cerrar sesión"
   },
   "language": {
     "title": "Elige un idioma",
@@ -113,10 +114,22 @@
     "profile": {
       "title": "Perfil",
       "body": "Aquí estarán tus datos, viajes anteriores y preferencias."
-    },
-    "login": {
-      "title": "Iniciar sesión",
-      "body": "Inicia sesión para sincronizar tus favoritos y reservas en todos tus dispositivos."
+    }
+  },
+  "login": {
+    "title": "Iniciar sesión",
+    "description": "Bienvenido de nuevo. Inicia sesión para llevar contigo tus favoritos y reservas.",
+    "email": "Correo electrónico",
+    "password": "Contraseña",
+    "submit": "Iniciar sesión",
+    "submitting": "Iniciando sesión…",
+    "errors": {
+      "invalidEmail": "Introduce una dirección de correo válida.",
+      "passwordRequired": "Introduce tu contraseña.",
+      "invalidCredentials": "El correo y la contraseña no coinciden.",
+      "emailNotConfirmed": "Confirma tu correo antes de iniciar sesión.",
+      "rateLimited": "Demasiados intentos. Inténtalo de nuevo en un minuto.",
+      "unknown": "Algo salió mal. Inténtalo de nuevo."
     }
   },
   "dialog": {

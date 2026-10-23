@@ -14,7 +14,8 @@
     "menu": "打开菜单",
     "wishlist": "心愿单",
     "profile": "个人资料",
-    "login": "登录"
+    "login": "登录",
+    "logout": "退出登录"
   },
   "language": {
     "title": "选择语言",
@@ -113,10 +114,22 @@
     "profile": {
       "title": "个人资料",
       "body": "你的资料、历史行程和偏好设置将显示在这里。"
-    },
-    "login": {
-      "title": "登录",
-      "body": "登录后可在所有设备间同步心愿单和预订。"
+    }
+  },
+  "login": {
+    "title": "登录",
+    "description": "欢迎回来。登录后，心愿单和预订将随你同行。",
+    "email": "邮箱",
+    "password": "密码",
+    "submit": "登录",
+    "submitting": "正在登录…",
+    "errors": {
+      "invalidEmail": "请输入有效的邮箱地址。",
+      "passwordRequired": "请输入密码。",
+      "invalidCredentials": "邮箱与密码不匹配。",
+      "emailNotConfirmed": "登录前请先确认邮箱。",
+      "rateLimited": "尝试次数过多，请一分钟后再试。",
+      "unknown": "出了点问题，请重试。"
     }
   },
   "dialog": {

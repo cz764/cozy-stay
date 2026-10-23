@@ -23,7 +23,7 @@ function ListingCard({ listing, priority = false }: ListingCardProps) {
           positioning context. */}
       <Link
         href={`/listing/${id}`}
-        className="flex flex-col rounded-2xl outline-none focus-visible:ring-[3px] focus-visible:ring-ring/50"
+        className="flex flex-col rounded-2xl outline-none focus-ring"
       >
         <div className="relative aspect-square w-full overflow-hidden rounded-2xl">
           {/* Decorative: the photo's meaning is carried by the card's text,

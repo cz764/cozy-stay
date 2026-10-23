@@ -14,7 +14,8 @@
     "menu": "Ouvrir le menu",
     "wishlist": "Favoris",
     "profile": "Profil",
-    "login": "Se connecter"
+    "login": "Se connecter",
+    "logout": "Se déconnecter"
   },
   "language": {
     "title": "Choisissez une langue",
@@ -113,10 +114,22 @@
     "profile": {
       "title": "Profil",
       "body": "Vos informations, vos voyages passés et vos préférences seront ici."
-    },
-    "login": {
-      "title": "Se connecter",
-      "body": "Connectez-vous pour synchroniser vos favoris et vos réservations sur tous vos appareils."
+    }
+  },
+  "login": {
+    "title": "Se connecter",
+    "description": "Bon retour. Connectez-vous pour garder vos favoris et vos réservations avec vous.",
+    "email": "E-mail",
+    "password": "Mot de passe",
+    "submit": "Se connecter",
+    "submitting": "Connexion…",
+    "errors": {
+      "invalidEmail": "Saisissez une adresse e-mail valide.",
+      "passwordRequired": "Saisissez votre mot de passe.",
+      "invalidCredentials": "L’e-mail et le mot de passe ne correspondent pas.",
+      "emailNotConfirmed": "Confirmez votre e-mail avant de vous connecter.",
+      "rateLimited": "Trop de tentatives. Réessayez dans une minute.",
+      "unknown": "Une erreur est survenue. Veuillez réessayer."
     }
   },
   "dialog": {

@@ -1,17 +1,21 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useRef, useState, useTransition } from "react";
 import Link from "next/link";
+import { usePathname, useSearchParams } from "next/navigation";
 import {
   Globe,
   Heart,
   Languages,
   LogIn,
+  LogOut,
   Menu,
   UserCircle,
   UserRound,
 } from "lucide-react";
 
+import { logout } from "@/auth/actions";
+import { loginHref } from "@/auth/redirect";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -23,10 +27,17 @@ import { useLocale, useT } from "@/i18n/client";
 import { LOCALE_NAMES } from "@/i18n/config";
 import { LanguageDialog } from "./LanguageDialog";
 
-export function HeaderActions() {
+interface HeaderActionsProps {
+  isAuthenticated: boolean;
+}
+
+export function HeaderActions({ isAuthenticated }: HeaderActionsProps) {
   const t = useT();
   const locale = useLocale();
+  const pathname = usePathname();
+  const searchParams = useSearchParams();
   const [languageOpen, setLanguageOpen] = useState(false);
+  const [isLoggingOut, startLogout] = useTransition();
   // The dropdown has unmounted by the time the dialog closes, so Radix cannot
   // restore focus on its own; remember which control opened the dialog.
   const languageOpener = useRef<HTMLElement | null>(null);
@@ -37,6 +48,10 @@ export function HeaderActions() {
     setLanguageOpen(true);
   };
 
+  // Log in returns the visitor to this exact page, search included.
+  const query = searchParams.toString();
+  const returnTo = query ? `${pathname}?${query}` : pathname;
+
   return (
     <>
       {/* The globe is hidden below `sm`; the Language menu item covers phones. */}
@@ -44,7 +59,7 @@ export function HeaderActions() {
         type="button"
         aria-label={t("header.language")}
         onClick={(event) => openLanguage(event.currentTarget)}
-        className="hidden rounded-full p-2 text-muted-foreground outline-none hover:bg-accent cursor-pointer focus-visible:ring-[3px] focus-visible:ring-ring/50 sm:block"
+        className="hidden rounded-full p-2 text-muted-foreground outline-none hover:bg-accent cursor-pointer focus-ring sm:block"
       >
         <Globe className="size-5" aria-hidden="true" />
       </button>
@@ -53,7 +68,7 @@ export function HeaderActions() {
         <DropdownMenuTrigger
           ref={menuTrigger}
           aria-label={t("header.menu")}
-          className="flex cursor-pointer items-center gap-2 rounded-full border px-3 py-1.5 shadow-sm outline-none transition-shadow hover:shadow-md focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          className="flex cursor-pointer items-center gap-2 rounded-full border px-3 py-1.5 shadow-sm outline-none transition-shadow hover:shadow-md focus-ring"
         >
           <Menu className="size-4 text-muted-foreground" aria-hidden="true" />
           <UserCircle
@@ -82,12 +97,22 @@ export function HeaderActions() {
             </span>
           </DropdownMenuItem>
           <DropdownMenuSeparator />
-          <DropdownMenuItem asChild>
-            <Link href="/login">
-              <LogIn />
-              {t("header.login")}
-            </Link>
-          </DropdownMenuItem>
+          {isAuthenticated ? (
+            <DropdownMenuItem
+              disabled={isLoggingOut}
+              onSelect={() => startLogout(() => logout())}
+            >
+              <LogOut />
+              {t("header.logout")}
+            </DropdownMenuItem>
+          ) : (
+            <DropdownMenuItem asChild>
+              <Link href={loginHref(returnTo)}>
+                <LogIn />
+                {t("header.login")}
+              </Link>
+            </DropdownMenuItem>
+          )}
         </DropdownMenuContent>
       </DropdownMenu>
 

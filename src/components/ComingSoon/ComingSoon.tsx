@@ -1,14 +1,13 @@
 import Link from "next/link";
-import { LogIn, UserRound, type LucideIcon } from "lucide-react";
+import { UserRound, type LucideIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { getT } from "@/i18n/server";
 
-export type ComingSoonFeature = "profile" | "login";
+export type ComingSoonFeature = "profile";
 
 const icons: Record<ComingSoonFeature, LucideIcon> = {
   profile: UserRound,
-  login: LogIn,
 };
 
 interface ComingSoonProps {

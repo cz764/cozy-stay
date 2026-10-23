@@ -1,11 +1,14 @@
+import { Suspense } from "react";
 import Link from "next/link";
 
+import { getUser } from "@/auth/server";
 import { Logo } from "@/components/Logo/Logo";
 import { getT } from "@/i18n/server";
 import { HeaderActions } from "./HeaderActions";
 
 export async function Header() {
   const t = await getT();
+  const user = await getUser();
 
   return (
     <header className="sticky top-0 z-30 bg-background/80 backdrop-blur">
@@ -31,7 +34,11 @@ export async function Header() {
           <span className="hidden font-brand text-sm text-muted-foreground lg:inline">
             {t("header.tagline")}
           </span>
-          <HeaderActions />
+          {/* useSearchParams inside HeaderActions needs a boundary; every route
+              renders dynamically, so the fallback never shows in practice. */}
+          <Suspense>
+            <HeaderActions isAuthenticated={user !== null} />
+          </Suspense>
         </div>
       </div>
     </header>
