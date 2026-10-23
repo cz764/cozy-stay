@@ -60,11 +60,23 @@ Saving from the detail page uses the same button in an `inline` variant with vis
 
 The API accepts the id list as a filter rather than a separate endpoint so the location and guest filters still compose with it. Malformed ids are dropped and an empty list matches nothing, never everything.
 
+## Email and password login
+
+Accounts live in Supabase Auth, as the roadmap planned, with one app-owned `public.profiles` row per user created by a trigger on `auth.users`. A hand-rolled `users` table was rejected: it would need the Supabase secret key on the server to keep password hashes out of the public GraphQL API, and every later table would lose `auth.uid()` row-level security.
+
+All auth runs server-side through `@supabase/ssr` with the publishable key, which is already server-only. The login form posts to a server action; the browser never talks to Supabase. The proxy creates a client per request and calls `getUser()` so an expiring session is refreshed and its new cookies written to the response, which server components cannot do themselves. `getUser()` rather than reading the cookie's JWT is deliberate: the cookie is client-controlled, and the call verifies the token with Supabase.
+
+The post-login destination travels as `?next=` and is validated to a same-origin path (`/...`, not `//host`, not `/login`) on both the page and the action, so the login page cannot become an open redirect. The header's Log in link carries the current path and query so a visitor returns to the exact search they left.
+
+Email is validated for shape only. Whether an address can receive mail is not verified anywhere; `test@test.com` is a valid account. Errors are returned from the action as a fixed code and translated on the client, so the catalog, not the action, owns the wording.
+
+The seeded test account is inserted into `auth.users` and `auth.identities` directly rather than through the Auth API so the seed stays one re-runnable SQL file with no secret key involved.
+
 ## Accounts roadmap
 
 The build order was reconsidered: a profile page is the signed-in user's data and has nothing to show before authentication, while an anonymous wishlist is a complete feature on its own. So: wishlist (done, anonymous), then authentication, then profile.
 
-Authentication will use Supabase Auth through `@supabase/ssr`, kept server-side: credential and OAuth flows run in server actions and a `/auth/callback` route handler, and the session lives in cookies. This preserves the existing rule that Supabase keys stay out of the browser bundle. The `/login` route becomes the sign-in form; the menu's Log in item toggles to Log out when a session exists.
+Authentication uses Supabase Auth through `@supabase/ssr`, kept server-side (see _Email and password login_ above). Email and password login is done; registration is next, then OAuth through a `/auth/callback` route handler.
 
 With a session available, the wishlist moves to a `wishlists (user_id, listing_id, created_at)` table protected by row-level security on `auth.uid()`, added as a CLI migration like every schema change. On first sign-in the anonymous `localStorage` list is merged into the table and cleared. `useWishlist` keeps its `{ ids, has, toggle }` shape; only the store behind it changes, so cards and the detail header do not.
 
