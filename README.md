@@ -15,7 +15,7 @@ npm run dev      # http://localhost:3000
 ```
 
 Needs a `.env.local` with `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY`
-(deliberately not `NEXT_PUBLIC_` — the backend is only reached from the
+(deliberately not `NEXT_PUBLIC_` – the backend is only reached from the
 server). The schema and seed live in `supabase/`; after editing any GraphQL
 document in `src/app/api/`, run `npm run codegen` to regenerate the types in
 `src/gql/`.
@@ -36,7 +36,7 @@ result is a shareable link:
   which calls the API and renders the grid. Refresh or share the link and you get
   the same result.
 
-See [API](#api) for how pagination fits alongside this — it's the one piece of
+See [API](#api) for how pagination fits alongside this – it's the one piece of
 state deliberately kept out of the URL.
 
 ## Language
@@ -49,15 +49,15 @@ key missing from another catalog is a build error. Server components call
 `await getT()`; client components call `useT()` from the `I18nProvider` the
 root layout mounts with the active catalog.
 
-Resolution order, implemented once in `src/middleware.ts`:
+Resolution order, implemented once in `src/proxy.ts`:
 
-1. `?lg=fr` on any URL — a shareable link; it is also persisted to the cookie.
-2. The `lg` cookie — set by the link above or by the language dialog
+1. `?lg=fr` on any URL – a shareable link; it is also persisted to the cookie.
+2. The `lg` cookie – set by the link above or by the language dialog
    (Globe button, or **Language** in the menu on phones), through a server
    action followed by `router.refresh()` so the layout re-renders in place.
 3. `en`.
 
-The middleware forwards the result in an `x-locale` request header, which is
+The proxy forwards the result in an `x-locale` request header, which is
 what `getLocale()` reads, and `<html lang>` and page metadata follow it. Only
 UI chrome is translated: listing titles and descriptions come from the
 database in English.
@@ -76,7 +76,7 @@ be undone. The list lives on one device until accounts exist; see
 ## API
 
 The backend is Supabase pg_graphql, reached only from the server through
-`src/app/api/server.ts` — the one place search and pagination are implemented.
+`src/app/api/server.ts` – the one place search and pagination are implemented.
 Server components call it directly; the browser goes through
 `GET /api/listings`, a thin HTTP adapter over the same module. That split keeps
 the Supabase credentials and the GraphQL documents out of the client bundle,
@@ -91,10 +91,10 @@ GET /api/listings?location=lisbon&guests=4&after=<cursor>&first=12
 
 | Param      | Type     | Default | Notes                                                 |
 | ---------- | -------- | ------- | ----------------------------------------------------- |
-| `location` | string   | —       | Case-insensitive match on listing location or title   |
-| `guests`   | number   | —       | Matches listings with `maxGuests >= guests`           |
-| `ids`      | csv ids  | —       | Only these listings (wishlist); malformed ids dropped |
-| `after`    | cursor   | —       | Opaque; the previous page's `endCursor`. Omit for p.1 |
+| `location` | string   | –       | Case-insensitive match on listing location or title   |
+| `guests`   | number   | –       | Matches listings with `maxGuests >= guests`           |
+| `ids`      | csv ids  | –       | Only these listings (wishlist); malformed ids dropped |
+| `after`    | cursor   | –       | Opaque; the previous page's `endCursor`. Omit for p.1 |
 | `first`    | int 1–60 | `24`    | Clamped to `MAX_LIMIT`; malformed values fall back    |
 
 ### Response
@@ -123,23 +123,23 @@ static in-memory array. Against a live database an insert shifts every later
 offset, so a row added mid-scroll duplicates items across requests. A cursor
 pins the next page to the last row already seen, so the list stays consistent
 no matter what happens to the catalog between requests. The cursor is opaque
-to every layer above the backend — the route handler passes it through
+to every layer above the backend – the route handler passes it through
 untouched, and the client just echoes back `endCursor`.
 
-### Pagination state — deliberately not in the URL
+### Pagination state – deliberately not in the URL
 
 Search params (`location`, `guests`) live in the URL. Pagination depth does
 **not**, and that's intentional rather than an oversight.
 
 The initial fetch is `first=24` (`DEFAULT_LIMIT` in `src/data/constants.ts`).
-The server has no viewport, so this can't adapt to screen size — 24 fills the
+The server has no viewport, so this can't adapt to screen size – 24 fills the
 widest grid (6 columns) and merely over-fetches a little on mobile, which is
 cheaper than a second round trip. Appended pages live in `ListingFeed`'s client
 state; refresh resets to the top.
 
 Putting the depth in the URL (e.g. `?shown=48`) would restore scroll position
 across refresh and back-navigation, but requires a client-state → URL write via
-`history.replaceState` — notably **not** `router.replace()`, which would re-run
+`history.replaceState` – notably **not** `router.replace()`, which would re-run
 the server component on every scroll and re-render every card. That's additive
 later; the API contract above doesn't change.
 
@@ -148,23 +148,23 @@ later; the API contract above doesn't change.
 ```
 src/
   app/
-    page.tsx                        Landing page — reads searchParams, renders loader
+    page.tsx                        Landing page – reads searchParams, renders loader
     listing/[id]/
-      page.tsx                      Detail page — fetches one listing, renders ListingDetail
+      page.tsx                      Detail page – fetches one listing, renders ListingDetail
       loading.tsx                   Streaming skeleton for the detail page
       not-found.tsx                 Unknown/invalid id
     api/
-      index.ts                      fetchListings() — the browser's typed client for the route below
+      index.ts                      fetchListings() – the browser's typed client for the route below
       server.ts                     GraphQL documents + fetchListings/fetchListingById (server-only)
-      graphql.ts                    executeGraphQL() — fetch wrapper for Supabase pg_graphql
-      listings/route.ts             GET /api/listings — HTTP edge over server.ts
+      graphql.ts                    executeGraphQL() – fetch wrapper for Supabase pg_graphql
+      listings/route.ts             GET /api/listings – HTTP edge over server.ts
     wishlist/page.tsx               Saved stays (client-fetched from localStorage ids)
     profile/page.tsx                Coming soon
     login/page.tsx                  Coming soon
     layout.tsx                      Root layout + fonts, locale provider, header, search bar
     globals.css                     Tailwind v4 + shadcn theme tokens (warm coral palette)
     error.tsx                       Route error boundary
-  middleware.ts                     Resolves the locale from ?lg= / cookie, sets the header
+  proxy.ts                          Resolves the locale from ?lg= / cookie, sets the header
   i18n/
     config.ts                       Locale list, cookie/param names
     translate.ts                    createT() + MessageKey type derived from en.json
@@ -177,7 +177,7 @@ src/
       Header.tsx                    Server shell: logo, nav, tagline
       HeaderActions.tsx             Client: globe, user menu (Wishlist/Profile/Language/Log in)
       LanguageDialog.tsx            Radix dialog listing the locales
-    Logo/Logo.tsx                   The cozystay wordmark — render the brand only through this
+    Logo/Logo.tsx                   The cozystay wordmark – render the brand only through this
     ComingSoon/ComingSoon.tsx       Placeholder body for routes that exist before their feature
     WishlistButton/WishlistButton.tsx  Heart (overlay) or Save pill (inline), aria-pressed
     WishlistFeed/WishlistFeed.tsx   Client: ids → /api/listings?ids → ListingGrid
@@ -186,10 +186,10 @@ src/
       SearchBarSkeleton.tsx         Static replica used as the Suspense fallback
     SearchField/SearchField.tsx     Presentational field/divider used by SearchBar
     ListingLoader/
-      ListingLoader.tsx             Async server component — fetches page 1, hands it to the feed
+      ListingLoader.tsx             Async server component – fetches page 1, hands it to the feed
       ListingLoaderSkeleton.tsx     Suspense fallback (header + grid skeletons)
     FeaturedStaysHeader/
-      FeaturedStaysHeader.tsx       "Featured stays in X" — takes `total`
+      FeaturedStaysHeader.tsx       "Featured stays in X" – takes `total`
       FeaturedStaysHeaderSkeleton.tsx
     ListingFeed/
       ListingFeed.tsx               Client; owns accumulated items + scroll append
@@ -197,7 +197,7 @@ src/
       ListingGrid.tsx               Responsive grid (1→6 cols) + empty state
       ListingGridSkeleton.tsx       Placeholder row, defaults to DEFAULT_LIMIT
     ListingCard/
-      ListingCard.tsx               One stay (memo'd) — links to /listing/[id]
+      ListingCard.tsx               One stay (memo'd) – links to /listing/[id]
       ListingCardSkeleton.tsx
     ListingDetail/
       ListingDetail.tsx             Layout shell composing the sections below (all server)
@@ -214,7 +214,7 @@ src/
   data/
     types.ts                        Listing, ListingDetail, ListingQuery, ListingsPage
     constants.ts                    DEFAULT_LIMIT / MAX_LIMIT / AUTO_LOAD_PAGES
-  gql/                              Generated by `npm run codegen` — do not edit by hand
+  gql/                              Generated by `npm run codegen` – do not edit by hand
   utils/index.ts                    cn(), toListing()
 supabase/
   migrations/                       Schema + pg_graphql config
@@ -240,10 +240,10 @@ user's data" and has nothing to show before it. Decisions taken so far, in
   `localStorage` list is merged in, then cleared. `useWishlist` keeps its
   shape; only the store behind it changes.
 - **Profile** then becomes display name, avatar and a link to the wishlist,
-  read from `auth.users` metadata — small by design.
+  read from `auth.users` metadata – small by design.
 - The menu's **Log in** item becomes **Log out** when a session exists.
 
-- A filter sidebar — **ratings, location, laundry, pets-friendly, AC** — that
+- A filter sidebar – **ratings, location, laundry, pets-friendly, AC** – that
   writes to the same query string (e.g. `?minRating=4.8&laundry=true&pets=true`),
   keeping every result shareable. The `Listing.amenities` facets already exist
   for this.
@@ -251,12 +251,12 @@ user's data" and has nothing to show before it. Decisions taken so far, in
 - **Listing detail page interactions.** `/listing/[id]` is shipped, and
   `ListingDetail` plus its sections are all server components today. Each
   interaction below becomes its own small client component under
-  `components/ListingDetail/` — the shell stays server so the static parts
+  `components/ListingDetail/` – the shell stays server so the static parts
   ship no JS:
-  - _Gallery lightbox_ — each photo clickable, opening a modal with the
+  - _Gallery lightbox_ – each photo clickable, opening a modal with the
     enlarged image (and prev/next to flip through the full set, since the
     grid only shows the first five).
-  - _Reservation box_ — check-in / check-out calendar in `PriceSection` and a
+  - _Reservation box_ – check-in / check-out calendar in `PriceSection` and a
     Reserve button to submit the booking. Depends on the date-availability
     modeling below; the `bookings` table already exists in the seed schema.
 - Date availability (modeling availability ranges per listing).
@@ -264,22 +264,22 @@ user's data" and has nothing to show before it. Decisions taken so far, in
 
 ### Scaling infinite scroll past ~1,000 listings
 
-Fine at 50 rows today. Ordered by cost — each stage waits for its trigger.
+Fine at 50 rows today. Ordered by cost – each stage waits for its trigger.
 
-- **Done already** — `next/image` lazy-loads offscreen images (the dominant
+- **Done already** – `next/image` lazy-loads offscreen images (the dominant
   cost), `ListingCard` is `memo`'d. Enough for a few hundred cards.
-- **1. `content-visibility: auto`** _(jank at ~300–500 cards)_ — skips offscreen
+- **1. `content-visibility: auto`** _(jank at ~300–500 cards)_ – skips offscreen
   layout/paint but keeps cards in the DOM, so SEO, Ctrl+F and a11y survive.
   Two lines of CSS. Needs `contain-intrinsic-size: auto <h>` or the scrollbar
   jitters, since card height varies ~285–420px across breakpoints.
-- **2. Virtualize** _(~1,000+ cards, confirmed by a profile)_ — use
+- **2. Virtualize** _(~1,000+ cards, confirmed by a profile)_ – use
   `@tanstack/react-virtual` or `react-virtuoso`, **not** `react-window`, which
   scrolls its own inner div and would strand the header outside it. Needs a
-  `ResizeObserver` for the 1→6 column count. Costs SEO, Ctrl+F, a11y — mitigate
+  `ResizeObserver` for the 1→6 column count. Costs SEO, Ctrl+F, a11y – mitigate
   by leaving the server-rendered first page un-virtualized.
-- **3. API changes** _(catalog in the millions)_ — cursor pagination is already
+- **3. API changes** _(catalog in the millions)_ – cursor pagination is already
   in place; what remains is dropping the exact `totalCount`, since `COUNT(*)`
-  over millions dominates the request — render "1,000+ stays" instead.
+  over millions dominates the request – render "1,000+ stays" instead.
 - **4. Evict far-offscreen pages** _(cap auto scroll for 6 pages)_ - Insert a
   load more button when user scrolled for 6 pages, that constant is defined in AUTO_LOAD_PAGES.
   Therefore no off screen footers.

@@ -18,8 +18,8 @@ function ListingCard({ listing, priority = false }: ListingCardProps) {
 
   return (
     <article className="group relative flex flex-col">
-      {/* The wishlist button stays a sibling of the link — interactive
-          elements can't nest — and overlays the image via the article's
+      {/* The wishlist button stays a sibling of the link – interactive
+          elements can't nest – and overlays the image via the article's
           positioning context. */}
       <Link
         href={`/listing/${id}`}

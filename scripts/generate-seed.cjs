@@ -24,7 +24,7 @@ const values = listings
   )
   .join(",\n");
 
-const sql = `-- Seed data for cozy-stay — generated from scripts/seed-listings.ts, do not edit the
+const sql = `-- Seed data for cozy-stay – generated from scripts/seed-listings.ts, do not edit the
 -- base VALUES block by hand. Re-runnable: truncates and repopulates everything.
 -- Run AFTER supabase/migrations/20260818145712_init.sql, in the Supabase SQL Editor.
 
@@ -54,7 +54,7 @@ select
     'Settle into the rhythm of '
   ])[1 + seed % 6] || location ||
     ', this stay comfortably sleeps up to ' || guests ||
-    ' guests. Thoughtful touches throughout, fast wifi, and a host who knows the neighborhood inside out — the perfect base from morning coffee to nightcap.',
+    ' guests. Thoughtful touches throughout, fast wifi, and a host who knows the neighborhood inside out – the perfect base from morning coffee to nightcap.',
   (array['Maya','Jonas','Priya','Marco','Sofia','Kenji','Amara','Lucas','Ingrid','Tomas','Leila','Owen','Chiara','Anders','Noor','Felix'])[1 + seed % 16],
   'https://i.pravatar.cc/150?u=cozyhost' || (1 + seed % 16),
   2014 + seed % 11,
@@ -92,7 +92,7 @@ select
   ])[1 + i % 6] ||
     (array['Lisbon, Portugal','Lake Tahoe, California','Amsterdam, Netherlands','Santorini, Greece','Kyoto, Japan','Joshua Tree, California','Barcelona, Spain','Chamonix, France','Cotswolds, England','Marrakesh, Morocco','Tulum, Mexico','Brooklyn, New York','Bergen, Norway','Melbourne, Australia','Tokyo, Japan','Puglia, Italy','Tofino, Canada','Buenos Aires, Argentina','Oaxaca, Mexico','Prague, Czechia','Ericeira, Portugal','Rovaniemi, Finland','Istanbul, Türkiye','Stellenbosch, South Africa','Hudson Valley, New York','Paris, France','Seoul, South Korea','Muskoka, Canada','Positano, Italy','Madrid, Spain'])[1 + i % 30] ||
     ', this stay comfortably sleeps up to ' || (1 + (i * 13) % 10) ||
-    ' guests. Thoughtful touches throughout, fast wifi, and a host who knows the neighborhood inside out — the perfect base from morning coffee to nightcap.',
+    ' guests. Thoughtful touches throughout, fast wifi, and a host who knows the neighborhood inside out – the perfect base from morning coffee to nightcap.',
   (array['Maya','Jonas','Priya','Marco','Sofia','Kenji','Amara','Lucas','Ingrid','Tomas','Leila','Owen','Chiara','Anders','Noor','Felix'])[1 + i % 16],
   'https://i.pravatar.cc/150?u=cozyhost' || (1 + i % 16),
   2014 + i % 11,
@@ -117,7 +117,7 @@ select l.id, 'https://picsum.photos/seed/stay' || l.id || 'p' || n || '/800/600'
 from public.listings l
 cross join lateral generate_series(1, 4) as n;
 
--- 4) Reviews — exactly review_count rows per listing, so the count shown on
+-- 4) Reviews – exactly review_count rows per listing, so the count shown on
 --    cards is always truthful.
 insert into public.reviews (listing_id, author, rating, body, created_at)
 select
@@ -125,7 +125,7 @@ select
   (array['Elena','Raj','Katie','Mateus','Hana','Dmitri','Alice','Yusuf','Greta','Sam','Mei','Pablo','Astrid','Theo','Zara','Nils','Rosa','Ken','Freya','Omar','June','Iker','Wren','Bao'])[1 + ((l.id * 7 + n * 3) % 24)::int],
   case when (l.id + n) % 11 = 0 then 3 else (4 + (l.id + n) % 2)::int end,
   (array[
-    'Lovely stay — exactly as pictured, and the host was quick to answer questions.',
+    'Lovely stay – exactly as pictured, and the host was quick to answer questions.',
     'The location could not be better. We walked everywhere and slept great.',
     'Spotless, comfortable, and full of charm. Would absolutely come back.',
     'Check-in was seamless and the space felt bigger than the photos suggest.',
@@ -134,7 +134,7 @@ select
     'Our second time here and it somehow keeps getting better.',
     'Quiet at night, lively by day. The host''s local tips were spot on.',
     'The bed is the most comfortable I have had while traveling. Truly.',
-    'Perfect for our group — plenty of space and a very well-stocked kitchen.',
+    'Perfect for our group – plenty of space and a very well-stocked kitchen.',
     'Minor hiccup with hot water on day one, resolved within the hour.',
     'The photos undersell it. The terrace at sunset is unforgettable.'
   ])[1 + ((l.id * 5 + n) % 12)::int],
@@ -142,7 +142,7 @@ select
 from public.listings l
 cross join lateral generate_series(1, l.review_count) as n;
 
--- 5) Bookings — 2 to 5 blocked ranges per listing over the next ~4 months.
+-- 5) Bookings – 2 to 5 blocked ranges per listing over the next ~4 months.
 --    Overlaps are fine; availability derivation unions blocked days.
 insert into public.bookings (listing_id, start_date, end_date)
 select

@@ -1,10 +1,10 @@
 {
   "meta": {
-    "title": "cozystay - Escapa y relájate",
+    "title": "cozystay – Escapa y relájate",
     "description": "Encuentra tu próximo hogar acogedor para escapar del caos de la vida y relajarte para recargar energías antes del próximo destino.",
-    "pageTitle": "{page} - cozystay",
+    "pageTitle": "{page} – cozystay",
     "listingDescription": "{title} en {location}, desde ${price} por noche.",
-    "notFoundTitle": "Alojamiento no encontrado — cozystay"
+    "notFoundTitle": "Alojamiento no encontrado – cozystay"
   },
   "header": {
     "stays": "Alojamientos",
@@ -78,7 +78,7 @@
       "one": "{count} reseña",
       "other": "{count} reseñas"
     },
-    "photoAlt": "{title} en {location} — foto {number}",
+    "photoAlt": "{title} en {location} – foto {number}",
     "about": "Acerca de esta casa",
     "amenitiesTitle": "Lo que ofrece este lugar",
     "laundry": "Lavandería",

@@ -15,7 +15,7 @@ export const getLocale = cache(async (): Promise<Locale> => {
   const fromHeader = (await headers()).get(LOCALE_HEADER);
   if (isLocale(fromHeader)) return fromHeader;
 
-  // Renders the middleware matcher skips still honor a stored preference.
+  // Renders the proxy matcher skips still honor a stored preference.
   const fromCookie = (await cookies()).get(LOCALE_COOKIE)?.value;
   return isLocale(fromCookie) ? fromCookie : DEFAULT_LOCALE;
 });

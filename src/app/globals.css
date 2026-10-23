@@ -59,7 +59,7 @@
   --popover: oklch(1 0 0);
   --popover-foreground: oklch(0.21 0.006 56);
 
-  /* Coral primary — Airbnb-esque "rausch" */
+  /* Coral primary – Airbnb-esque "rausch" */
   --primary: oklch(0.637 0.208 13.5);
   --primary-foreground: oklch(0.985 0.001 106);
 

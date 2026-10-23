@@ -1,7 +1,7 @@
 import { Listing } from "../src/data/types";
 
 /**
- * The 50 curated listings that anchor the seed data — the sole consumer is
+ * The 50 curated listings that anchor the seed data – the sole consumer is
  * scripts/generate-seed.cjs, which ports them into supabase/seed.sql. Not
  * imported by app code; the app reads listings from Supabase.
  */
