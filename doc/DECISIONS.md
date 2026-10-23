@@ -46,6 +46,12 @@ The web fonts have no CJK glyphs. Rather than ship Noto Sans SC (which slows eve
 
 The wordmark is rendered only through `components/Logo` so the brand mark cannot drift between pages.
 
+## Focus ring
+
+The `--ring` token is plum (`oklch(0.45 0.16 330)`), analogous to the coral primary rather than the primary itself. Coral was invisible as a ring on primary buttons, and a neutral grey fails over the dark photos behind the wishlist heart. Plum also keeps focus visually distinct from the destructive red used for invalid fields, which coral and its darker shades did not.
+
+Focus is drawn through one `focus-ring` utility in `globals.css` as a two-layer ring: a 2px background-colored gap, then 2px of ring color. The gap carries the contrast on surfaces the color cannot (the coral button, dark images), so one recipe works everywhere. Components use the utility instead of repeating the ring classes, so tuning happens in one place.
+
 ## Routes before features
 
 `/wishlist`, `/profile` and `/login` were created as real routes rendering a shared `ComingSoon` body rather than a single `/coming-soon?feature=` page. The URLs in the menu never change when the feature lands, and each route can grow its own metadata and loading state independently. `/wishlist` has since become real; the other two remain placeholders.

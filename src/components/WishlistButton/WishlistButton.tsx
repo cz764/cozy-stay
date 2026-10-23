@@ -31,7 +31,7 @@ export function WishlistButton({
         aria-label={t("card.save", { title })}
         onClick={() => toggle(id)}
         className={cn(
-          "flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium outline-none transition-colors hover:bg-accent focus-visible:ring-[3px] focus-visible:ring-ring/50",
+          "flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium outline-none transition-colors hover:bg-accent focus-ring",
           className,
         )}
       >
@@ -55,7 +55,7 @@ export function WishlistButton({
       aria-label={t("card.save", { title })}
       onClick={() => toggle(id)}
       className={cn(
-        "rounded-full p-2 text-white/90 outline-none transition-transform duration-200 hover:scale-108 focus-visible:ring-[3px] focus-visible:ring-ring/50",
+        "rounded-full p-2 text-white/90 outline-none transition-transform duration-200 hover:scale-108 focus-ring",
         className,
       )}
     >

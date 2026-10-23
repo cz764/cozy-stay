@@ -59,7 +59,7 @@ export function HeaderActions({ isAuthenticated }: HeaderActionsProps) {
         type="button"
         aria-label={t("header.language")}
         onClick={(event) => openLanguage(event.currentTarget)}
-        className="hidden rounded-full p-2 text-muted-foreground outline-none hover:bg-accent cursor-pointer focus-visible:ring-[3px] focus-visible:ring-ring/50 sm:block"
+        className="hidden rounded-full p-2 text-muted-foreground outline-none hover:bg-accent cursor-pointer focus-ring sm:block"
       >
         <Globe className="size-5" aria-hidden="true" />
       </button>
@@ -68,7 +68,7 @@ export function HeaderActions({ isAuthenticated }: HeaderActionsProps) {
         <DropdownMenuTrigger
           ref={menuTrigger}
           aria-label={t("header.menu")}
-          className="flex cursor-pointer items-center gap-2 rounded-full border px-3 py-1.5 shadow-sm outline-none transition-shadow hover:shadow-md focus-visible:ring-[3px] focus-visible:ring-ring/50"
+          className="flex cursor-pointer items-center gap-2 rounded-full border px-3 py-1.5 shadow-sm outline-none transition-shadow hover:shadow-md focus-ring"
         >
           <Menu className="size-4 text-muted-foreground" aria-hidden="true" />
           <UserCircle
