@@ -1,8 +1,8 @@
 {
   "meta": {
-    "title": "cozystay — Évadez-vous et détendez-vous",
+    "title": "cozystay - Évadez-vous et détendez-vous",
     "description": "Trouvez votre prochain logement douillet pour échapper au chaos du quotidien et recharger vos batteries avant la prochaine destination.",
-    "pageTitle": "{page} — cozystay",
+    "pageTitle": "{page} - cozystay",
     "listingDescription": "{title} à {location}, à partir de {price} $ la nuit.",
     "notFoundTitle": "Logement introuvable — cozystay"
   },

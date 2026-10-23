@@ -1,4 +1,4 @@
--- Schema for cozy-stays — see BackendDesign.md.
+-- Schema for cozy-stay — see BackendDesign.md.
 -- Run in the Supabase SQL Editor (or via `supabase db push` once the CLI is linked).
 
 -- pg_graphql serves the GraphQL API; pg_trgm accelerates the ilike search.

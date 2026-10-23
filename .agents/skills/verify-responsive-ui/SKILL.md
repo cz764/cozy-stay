@@ -1,6 +1,6 @@
 ---
 name: verify-responsive-ui
-description: Verify UI changes in cozy-stays at the project's actual responsive breakpoints. Use when a change affects layout, styling, visibility, or responsive interactions.
+description: Verify UI changes in cozy-stay at the project's actual responsive breakpoints. Use when a change affects layout, styling, visibility, or responsive interactions.
 ---
 
 # Verify responsive UI

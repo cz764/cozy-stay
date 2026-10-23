@@ -24,7 +24,7 @@ const values = listings
   )
   .join(",\n");
 
-const sql = `-- Seed data for cozy-stays — generated from scripts/seed-listings.ts, do not edit the
+const sql = `-- Seed data for cozy-stay — generated from scripts/seed-listings.ts, do not edit the
 -- base VALUES block by hand. Re-runnable: truncates and repopulates everything.
 -- Run AFTER supabase/migrations/20260818145712_init.sql, in the Supabase SQL Editor.
 
